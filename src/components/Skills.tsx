@@ -11,6 +11,7 @@ const CARD: Record<Accent, string> = {
   paper: "bg-paper text-ink border-noir",
   lime: "bg-lime text-ink border-noir",
   violet: "bg-violet text-white border-white",
+  mist: "bg-mist text-ink border-noir/30",
 };
 
 export default function Skills() {

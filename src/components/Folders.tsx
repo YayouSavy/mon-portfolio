@@ -2,26 +2,22 @@
 // → Type : Client Component
 // → Raison : état ouvert/fermé, hover Framer, animation de hauteur
 import { useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import SectionTitle, { Outline } from "./SectionTitle";
 import Trombone from "./props/Trombone";
-import { PROJECTS, type Accent, type Project } from "../lib/data";
+import VisualRenderer from "./visuals/VisualRenderer";
+import { ACCENT_STYLES } from "../lib/accent";
+import { PROJECTS, type Project } from "../lib/data";
 import { spring, springSmooth, viewport } from "../lib/motion";
 
-/* Règle stroke de la DA + couleurs inversées pour le bouton "+" et le CTA */
-const V: Record<
-  Accent,
-  { body: string; grain: string; stroke: string; inverse: string; light: boolean }
-> = {
-  lime:   { body: "bg-lime text-ink",     grain: "grain-strong",  stroke: "border-noir",  inverse: "bg-ink text-lime",     light: true },
-  violet: { body: "bg-violet text-white", grain: "grain-overlay", stroke: "border-white", inverse: "bg-white text-violet", light: false },
-  paper:  { body: "bg-paper text-ink",    grain: "grain-strong",  stroke: "border-noir",  inverse: "bg-ink text-paper",    light: true },
-};
+/* Léger effet collage sur les dossiers fermés — neutralisé dès qu'un dossier s'ouvre */
+const REST_ROTATE = [-0.6, 0.5, -0.4, 0.6];
 
 function Folder({ p, index, open, onToggle }: { p: Project; index: number; open: boolean; onToggle: () => void }) {
   const [hovered, setHovered] = useState(false);
   const expanded = open || hovered; // hover = aperçu, clic = état persistant (tactile + clavier)
-  const v = V[p.color];
+  const v = ACCENT_STYLES[p.color];
   const panelId = `panel-${p.id}`;
 
   return (
@@ -35,12 +31,21 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
         if (e.key === "Escape" && open) onToggle();
       }}
     >
-      {/* Le soulèvement du dossier, en spring punchy */}
+      {/* Vignette qui dépasse de l'onglet : le coffre a l'air plein même fermé.
+          Décalage horizontal aligné sur celui de l'onglet (p.tabMl) pour qu'elle
+          semble sortir du bon onglet plutôt que d'un point fixe. */}
+      <div
+        aria-hidden
+        className={`absolute -top-7 left-3 h-16 w-[92px] -rotate-2 rounded-t-xl border-2 border-b-0 opacity-95 transition-opacity duration-300 ${v.body} ${v.stroke} ${v.grain} ${p.tabMl} ${expanded ? "opacity-0" : ""}`}
+      />
+
+      {/* Le soulèvement du dossier, en spring punchy + léger collage au repos */}
       <motion.div
-        animate={{ y: expanded ? -12 : 0 }}
+        animate={{ y: expanded ? -12 : 0, rotate: expanded ? 0 : REST_ROTATE[index % REST_ROTATE.length] }}
         transition={spring}
         onHoverStart={() => setHovered(true)}
         onHoverEnd={() => setHovered(false)}
+        className="relative"
       >
         <div className={`sheet relative ${v.light ? "light-surface" : ""}`} data-lift={expanded}>
           <Trombone className={p.clip} />
@@ -58,7 +63,7 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
           >
             <h3 className="m-0">
               <button
-                aria-expanded={open}
+                aria-expanded={expanded}
                 aria-controls={panelId}
                 onClick={onToggle}
                 className="relative z-[1] flex w-full items-center justify-between gap-6 p-6 text-left md:px-10 md:py-[30px]"
@@ -92,16 +97,21 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
                 transition={{ ...spring, delay: expanded ? 0.05 : 0 }}
                 className="px-6 pb-8 md:px-10 md:pb-11"
               >
-                <p className="mb-8 max-w-[62ch] text-lg leading-relaxed">{p.desc}</p>
-
-                <div className={`mb-[30px] flex flex-wrap gap-6 border-y-[1.5px] py-[26px] md:gap-10 ${v.stroke}`}>
-                  {p.metrics.map((m) => (
-                    <div key={m.label}>
-                      <p className="font-display text-[38px] font-extrabold leading-none tracking-[-0.02em]">{m.num}</p>
-                      <p className="mt-1.5 max-w-[20ch] text-sm font-medium opacity-80">{m.label}</p>
-                    </div>
-                  ))}
+                <div className="mb-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+                  <p className="max-w-[62ch] text-lg leading-relaxed">{p.desc}</p>
+                  <VisualRenderer visual={p.cover} className="max-w-[380px] lg:ml-auto" />
                 </div>
+
+                {p.metrics.length > 0 && (
+                  <div className={`mb-[30px] flex flex-wrap gap-6 border-y-[1.5px] py-[26px] md:gap-10 ${v.stroke}`}>
+                    {p.metrics.map((m) => (
+                      <div key={m.label}>
+                        <p className="font-display text-[38px] font-extrabold leading-none tracking-[-0.02em]">{m.num}</p>
+                        <p className="mt-1.5 max-w-[20ch] text-sm font-medium opacity-80">{m.label}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <div className="flex flex-wrap items-center justify-between gap-5">
                   <div className="flex flex-wrap gap-2.5">
@@ -111,12 +121,12 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
                       </span>
                     ))}
                   </div>
-                  <a
-                    href="#contact"
+                  <Link
+                    href={`/projets/${p.id}`}
                     className={`rounded-full px-[26px] py-[15px] text-[15px] font-semibold transition-transform duration-300 ease-spring hover:-translate-x-0.5 hover:-translate-y-0.5 active:scale-95 ${v.inverse}`}
                   >
-                    Ouvrir le dossier <span aria-hidden>↗</span>
-                  </a>
+                    {p.status === "soon" ? "Voir l'avancement" : "Ouvrir le dossier"} <span aria-hidden>↗</span>
+                  </Link>
                 </div>
               </motion.div>
             </motion.div>
@@ -144,7 +154,7 @@ export default function Folders() {
             Les <Outline>dossiers</Outline>
           </SectionTitle>
           <p className="text-lg text-mist">
-            Trois études de cas classées au coffre. Survolez ou touchez un dossier pour l&apos;ouvrir.
+            Trois dossiers complets, un quatrième en préparation. Survolez ou touchez un dossier pour l&apos;ouvrir.
           </p>
         </motion.header>
 
