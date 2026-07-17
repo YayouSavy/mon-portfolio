@@ -67,8 +67,7 @@ export default function CaseStudyView({
   }
 
   return (
-    <article className="relative overflow-hidden pb-[clamp(72px,10vh,140px)] pt-[clamp(48px,7vh,88px)]">
-      <div aria-hidden className="pointer-events-none absolute -left-[300px] -top-[300px] h-[760px] w-[760px] rounded-full bg-[radial-gradient(circle,rgba(221,250,108,0.1)_0%,transparent_62%)] blur-[90px]" />
+    <article className="pb-[clamp(72px,10vh,140px)] pt-[clamp(48px,7vh,88px)]">
 
       <div className="relative mx-auto w-[min(1080px,100%-48px)]">
         <Link href="/#projets" className="mb-10 inline-flex items-center gap-2 text-sm font-medium text-mist transition-colors hover:text-lime">

@@ -26,13 +26,7 @@ const LINKS: ContactLink[] = [
 
 export default function Contact() {
   return (
-    <footer id="contact" className="relative overflow-hidden pt-[clamp(88px,13vh,170px)]">
-      {/* Glow violet remontant du bas */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-[560px] left-1/2 h-[900px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(100,42,238,0.36)_0%,transparent_62%)] blur-[80px]"
-      />
-
+    <footer id="contact" className="pt-[clamp(88px,13vh,170px)]">
       <div className="relative mx-auto w-[min(1240px,100%-48px)] text-center">
         <motion.div initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={viewport} transition={spring}>
           <SectionTitle className="mb-6 text-[clamp(42px,7vw,104px)]">

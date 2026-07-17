@@ -10,12 +10,8 @@ import { spring, viewport } from "../lib/motion";
 
 export default function About() {
   return (
-    <section id="about" aria-label="À propos" className="relative py-[clamp(72px,10vh,140px)]">
-      {/* Pas d'overflow-hidden ici : ça coupait le blur en angle droit et créait
-          une ligne visible au bord de la section. Le radial-gradient s'éteint
-          tout seul avant son propre bord, pas besoin de le clipper. */}
-      <div aria-hidden className="pointer-events-none absolute -right-[260px] top-[8%] h-[640px] w-[640px] rounded-full bg-[radial-gradient(circle,rgba(100,42,238,0.26)_0%,transparent_62%)] blur-[90px]" />
-      <div className="relative mx-auto grid w-[min(1240px,100%-48px)] items-start gap-[clamp(44px,5.5vw,88px)] lg:grid-cols-[1fr_1.05fr]">
+    <section id="about" aria-label="À propos" className="py-[clamp(72px,10vh,140px)]">
+      <div className="mx-auto grid w-[min(1240px,100%-48px)] items-start gap-[clamp(44px,5.5vw,88px)] lg:grid-cols-[1fr_1.05fr]">
         {/* ---- Texte + process ---- */}
         <motion.div initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={viewport} transition={spring}>
           <SectionTitle>

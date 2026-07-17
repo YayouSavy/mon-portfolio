@@ -27,14 +27,7 @@ const line = {
 
 export default function Hero() {
   return (
-    <section
-      aria-label="Introduction"
-      className="relative overflow-hidden bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:240px_100%] py-[clamp(64px,9vh,110px)]"
-    >
-      {/* Glows néon lime + violet */}
-      <div aria-hidden className="pointer-events-none absolute -left-[340px] -top-[440px] h-[860px] w-[860px] rounded-full bg-[radial-gradient(circle,rgba(221,250,108,0.16)_0%,transparent_62%)] blur-[90px]" />
-      <div aria-hidden className="pointer-events-none absolute -bottom-[420px] -right-[360px] h-[980px] w-[980px] rounded-full bg-[radial-gradient(circle,rgba(100,42,238,0.34)_0%,transparent_62%)] blur-[90px]" />
-
+    <section aria-label="Introduction" className="relative py-[clamp(64px,9vh,110px)]">
       <div className="relative mx-auto grid w-[min(1240px,100%-48px)] items-center gap-[clamp(40px,5vw,72px)] lg:grid-cols-[1.05fr_0.95fr]">
         {/* ---- Colonne texte : NOM en très gros, rôle en dessous ---- */}
         <motion.div initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.09 } } }}>
