@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ArrowUpRight, Plus } from "lucide-react";
 import SectionTitle, { Outline } from "./SectionTitle";
 import VisualRenderer from "./visuals/VisualRenderer";
 import { useFolderOpen } from "./FolderTransition";
@@ -76,9 +77,9 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
                 </span>
                 <span
                   aria-hidden
-                  className={`grid h-[52px] w-[52px] shrink-0 place-items-center rounded-full text-2xl font-semibold transition-transform duration-300 ease-spring ${v.inverse} ${expanded ? "rotate-45" : ""}`}
+                  className={`grid h-[52px] w-[52px] shrink-0 place-items-center rounded-full transition-transform duration-300 ease-spring ${v.inverse} ${expanded ? "rotate-45" : ""}`}
                 >
-                  +
+                  <Plus size={22} strokeWidth={2.5} />
                 </span>
               </button>
             </h3>
@@ -129,9 +130,10 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
                       e.preventDefault();
                       openFolder(p.color, href);
                     }}
-                    className={`rounded-full px-[26px] py-[15px] text-[15px] font-semibold transition-transform duration-300 ease-spring hover:-translate-x-0.5 hover:-translate-y-0.5 active:scale-95 ${v.inverse}`}
+                    className={`inline-flex items-center gap-2 rounded-full px-[26px] py-[15px] text-[15px] font-semibold transition-transform duration-300 ease-spring hover:-translate-x-0.5 hover:-translate-y-0.5 active:scale-95 ${v.inverse}`}
                   >
-                    {p.status === "soon" ? "Voir l'avancement" : "Ouvrir le dossier"} <span aria-hidden>↗</span>
+                    {p.status === "soon" ? "Voir l'avancement" : "Ouvrir le dossier"}
+                    <ArrowUpRight aria-hidden size={18} strokeWidth={2.5} />
                   </Link>
                 </div>
               </motion.div>

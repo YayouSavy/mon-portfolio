@@ -3,6 +3,7 @@
 // → Raison : Framer Motion (stagger, entrée de la photo, flottement)
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import Tape from "./props/Tape";
 import { TAGS, type Accent } from "../lib/data";
 import { spring, springBouncy } from "../lib/motion";
@@ -62,8 +63,8 @@ export default function Hero() {
               className="group/cta flex items-center gap-3 rounded-full bg-lime py-[19px] pl-8 pr-[26px] text-[17px] font-semibold text-ink transition-all duration-300 ease-spring hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[5px_5px_0_#642AEE] active:scale-95"
             >
               Voir mes projets
-              <span aria-hidden className="grid h-[30px] w-[30px] place-items-center rounded-full bg-noir text-[15px] text-lime transition-transform duration-300 ease-spring group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5">
-                ↗
+              <span aria-hidden className="grid h-[30px] w-[30px] place-items-center rounded-full bg-noir text-lime transition-transform duration-300 ease-spring group-hover/cta:-translate-y-0.5 group-hover/cta:translate-x-0.5">
+                <ArrowUpRight size={16} strokeWidth={2.5} />
               </span>
             </a>
             <a

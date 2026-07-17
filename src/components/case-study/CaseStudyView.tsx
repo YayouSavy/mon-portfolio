@@ -3,6 +3,7 @@
 // → Raison : Framer Motion (whileInView) sur les sections de la page dossier
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
 import Tape from "../props/Tape";
 import VisualRenderer from "../visuals/VisualRenderer";
 import { ACCENT_STYLES } from "../../lib/accent";
@@ -35,7 +36,7 @@ export default function CaseStudyView({
       <section aria-label={project.title} className="relative overflow-hidden py-[clamp(72px,10vh,140px)]">
         <div className="relative mx-auto w-[min(880px,100%-48px)]">
           <Link href="/#projets" className="mb-10 inline-flex items-center gap-2 text-sm font-medium text-mist transition-colors hover:text-lime">
-            <span aria-hidden>←</span> Retour aux dossiers
+            <ArrowLeft aria-hidden size={16} strokeWidth={2.5} /> Retour aux dossiers
           </Link>
 
           <p className="mb-4 font-accent text-[11px] uppercase tracking-[0.1em] text-mist/70">{project.tab}</p>
@@ -71,7 +72,7 @@ export default function CaseStudyView({
 
       <div className="relative mx-auto w-[min(1080px,100%-48px)]">
         <Link href="/#projets" className="mb-10 inline-flex items-center gap-2 text-sm font-medium text-mist transition-colors hover:text-lime">
-          <span aria-hidden>←</span> Retour aux dossiers
+          <ArrowLeft aria-hidden size={16} strokeWidth={2.5} /> Retour aux dossiers
         </Link>
 
         {/* ---- En-tête ---- */}
