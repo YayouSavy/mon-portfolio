@@ -4,7 +4,6 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Tape from "../props/Tape";
-import Trombone from "../props/Trombone";
 import VisualRenderer from "../visuals/VisualRenderer";
 import { ACCENT_STYLES } from "../../lib/accent";
 import type { Project } from "../../lib/data";
@@ -100,7 +99,6 @@ export default function CaseStudyView({
           transition={{ ...spring, delay: 0.08 }}
           className="relative mt-12 max-w-[640px]"
         >
-          <Trombone className="-top-6 right-[14%] rotate-[9deg]" />
           <VisualRenderer visual={project.cover} />
           {project.ndaNote && <p className="mt-3 max-w-[56ch] text-sm text-mist/60">{project.ndaNote}</p>}
         </motion.div>

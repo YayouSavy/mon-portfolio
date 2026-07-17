@@ -5,14 +5,14 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import SectionTitle, { Accent } from "./SectionTitle";
 import Tape from "./props/Tape";
-import Trombone from "./props/Trombone";
 import { ID_ROWS, STEPS } from "../lib/data";
 import { spring, viewport } from "../lib/motion";
 
 export default function About() {
   return (
-    <section id="about" aria-label="À propos" className="border-t border-white/10 py-[clamp(72px,10vh,140px)]">
-      <div className="mx-auto grid w-[min(1240px,100%-48px)] items-start gap-[clamp(44px,5.5vw,88px)] lg:grid-cols-[1fr_1.05fr]">
+    <section id="about" aria-label="À propos" className="relative overflow-hidden py-[clamp(72px,10vh,140px)]">
+      <div aria-hidden className="pointer-events-none absolute -right-[300px] top-[10%] h-[720px] w-[720px] rounded-full bg-[radial-gradient(circle,rgba(100,42,238,0.22)_0%,transparent_62%)] blur-[90px]" />
+      <div className="relative mx-auto grid w-[min(1240px,100%-48px)] items-start gap-[clamp(44px,5.5vw,88px)] lg:grid-cols-[1fr_1.05fr]">
         {/* ---- Texte + process ---- */}
         <motion.div initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={viewport} transition={spring}>
           <SectionTitle>
@@ -46,7 +46,7 @@ export default function About() {
           </div>
         </motion.div>
 
-        {/* ---- La fiche : photo encadrée + trombone + scotch-étiquette ---- */}
+        {/* ---- La fiche : photo encadrée + scotch-étiquette ---- */}
         <motion.div
           initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -54,8 +54,6 @@ export default function About() {
           transition={{ ...spring, delay: 0.14 }}
           className="light-surface grain-multiply relative rotate-[1.4deg] rounded-folder bg-paper p-9 pb-8 text-ink shadow-paper transition-all duration-500 ease-spring hover:shadow-paper-lift hover:!rotate-0"
         >
-          <Trombone className="-top-[26px] left-8 -rotate-[8deg]" />
-
           <div className="relative z-[1] mb-6 flex flex-col gap-7 sm:flex-row sm:items-start">
             <div className="relative w-[172px] shrink-0 -rotate-[2.5deg]">
               <div className="relative aspect-[1/1.05] overflow-hidden rounded-2xl border-[3px] border-noir bg-lime">

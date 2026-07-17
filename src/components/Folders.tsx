@@ -5,8 +5,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import SectionTitle, { Outline } from "./SectionTitle";
-import Trombone from "./props/Trombone";
 import VisualRenderer from "./visuals/VisualRenderer";
+import { useFolderOpen } from "./FolderTransition";
 import { ACCENT_STYLES } from "../lib/accent";
 import { PROJECTS, type Project } from "../lib/data";
 import { spring, springSmooth, viewport } from "../lib/motion";
@@ -19,6 +19,8 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
   const expanded = open || hovered; // hover = aperçu, clic = état persistant (tactile + clavier)
   const v = ACCENT_STYLES[p.color];
   const panelId = `panel-${p.id}`;
+  const openFolder = useFolderOpen();
+  const href = `/projets/${p.id}`;
 
   return (
     <motion.article
@@ -48,8 +50,6 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
         className="relative"
       >
         <div className={`sheet relative ${v.light ? "light-surface" : ""}`} data-lift={expanded}>
-          <Trombone className={p.clip} />
-
           {/* Onglet du dossier, décalé différemment sur chaque dossier */}
           <p
             className={`relative top-0.5 inline-flex items-center gap-2.5 rounded-t-[18px] bg-[linear-gradient(180deg,rgba(255,255,255,0.22),rgba(255,255,255,0)_70%)] px-[26px] pb-2.5 pt-3 font-accent text-[11px] uppercase tracking-[0.1em] ${v.body} ${p.tabMl}`}
@@ -122,7 +122,13 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
                     ))}
                   </div>
                   <Link
-                    href={`/projets/${p.id}`}
+                    href={href}
+                    onClick={(e) => {
+                      // Modificateurs / clic milieu → laisser le navigateur ouvrir un nouvel onglet normalement
+                      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                      e.preventDefault();
+                      openFolder(p.color, href);
+                    }}
                     className={`rounded-full px-[26px] py-[15px] text-[15px] font-semibold transition-transform duration-300 ease-spring hover:-translate-x-0.5 hover:-translate-y-0.5 active:scale-95 ${v.inverse}`}
                   >
                     {p.status === "soon" ? "Voir l'avancement" : "Ouvrir le dossier"} <span aria-hidden>↗</span>
@@ -141,7 +147,7 @@ export default function Folders() {
   const [openId, setOpenId] = useState<string | null>(null);
 
   return (
-    <section id="projets" aria-label="Projets" className="border-t border-white/10 py-[clamp(72px,10vh,140px)]">
+    <section id="projets" aria-label="Projets" className="py-[clamp(72px,10vh,140px)]">
       <div className="mx-auto w-[min(1240px,100%-48px)]">
         <motion.header
           initial={{ opacity: 0, y: 36 }}
@@ -154,7 +160,8 @@ export default function Folders() {
             Les <Outline>dossiers</Outline>
           </SectionTitle>
           <p className="text-lg text-mist">
-            Trois dossiers complets, un quatrième en préparation. Survolez ou touchez un dossier pour l&apos;ouvrir.
+            Chaque dossier couvre la recherche, les arbitrages et les résultats — pas un teaser.
+            Survolez ou touchez pour l&apos;ouvrir.
           </p>
         </motion.header>
 

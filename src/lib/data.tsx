@@ -2,13 +2,13 @@ import type { ReactNode } from "react";
 
 export type Accent = "lime" | "violet" | "paper" | "mist";
 
-/* ---- Stickers compétences du hero (repris en rangée compacte, plus en stickers flottants) ---- */
-export const TAGS: { label: string; color: Accent }[] = [
-  { label: "Figma avancé",          color: "paper" },
-  { label: "Design-to-code",        color: "violet" },
-  { label: "Design system",         color: "lime" },
-  { label: "Recherche utilisateur", color: "paper" },
-  { label: "Anglais C1",            color: "violet" },
+/* ---- Stickers compétences du hero : flottent autour de la photo en lg: (pos), rangée simple en dessous. ---- */
+export const TAGS: { label: string; color: Accent; pos: string }[] = [
+  { label: "Figma avancé",          color: "paper",  pos: "lg:top-[2%] lg:-left-14 lg:-rotate-[9deg]" },
+  { label: "Design-to-code",        color: "violet", pos: "lg:top-[18%] lg:-right-16 lg:rotate-[8deg]" },
+  { label: "Design system",         color: "lime",   pos: "lg:top-[46%] lg:-left-20 lg:rotate-[3deg]" },
+  { label: "Recherche utilisateur", color: "paper",  pos: "lg:top-[68%] lg:-right-12 lg:-rotate-[10deg]" },
+  { label: "Anglais C1",            color: "violet", pos: "lg:-bottom-8 lg:left-[14%] lg:rotate-[6deg]" },
 ];
 
 /* ---- Post-its chiffres · chacun pointe vers le dossier qui porte le chiffre ---- */
@@ -48,7 +48,6 @@ export type Project = {
   cover: Visual;           // visuel principal — réutilisé en vignette ET en page
   metrics: { num: string; label: string }[];
   chips: string[];
-  clip: string;   // position du trombone
   tabMl: string;  // décalage de l'onglet
   z: string;      // empilement fermé
 };
@@ -103,7 +102,6 @@ export const PROJECTS: Project[] = [
       { num: "WCAG 2.2", label: "conformité garantie à la livraison" },
     ],
     chips: ["Recherche", "UI data-dense", "Télécoms"],
-    clip: "-top-5 right-[16%] rotate-[10deg]",
     tabMl: "ml-5 md:ml-8",
     z: "z-[1]",
   },
@@ -156,7 +154,6 @@ export const PROJECTS: Project[] = [
       { num: "Skills IA", label: "règles du DS converties en prompts" },
     ],
     chips: ["Design system", "Design-to-code", "IA"],
-    clip: "-top-[19px] left-[14%] rotate-[7deg]",
     tabMl: "ml-5 md:ml-[18%] lg:ml-[26%]",
     z: "z-[2]",
   },
@@ -207,7 +204,6 @@ export const PROJECTS: Project[] = [
       { num: "Commandes", label: "traitement nettement accéléré" },
     ],
     chips: ["Discovery", "Product design", "Outil métier"],
-    clip: "-top-[18px] right-[38%] -rotate-[9deg]",
     tabMl: "ml-5 md:ml-[36%] lg:ml-[52%]",
     z: "z-[3]",
   },
@@ -223,7 +219,6 @@ export const PROJECTS: Project[] = [
     cover: { kind: "comingSoon" },
     metrics: [],
     chips: [],
-    clip: "-top-4 left-[10%] rotate-[11deg]",
     tabMl: "ml-5 md:ml-[54%] lg:ml-[76%]",
     z: "z-[4]",
   },

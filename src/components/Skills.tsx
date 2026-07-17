@@ -16,8 +16,9 @@ const CARD: Record<Accent, string> = {
 
 export default function Skills() {
   return (
-    <section id="competences" aria-label="Compétences" className="border-t border-white/10 py-[clamp(72px,10vh,140px)]">
-      <div className="mx-auto w-[min(1240px,100%-48px)]">
+    <section id="competences" aria-label="Compétences" className="relative overflow-hidden py-[clamp(72px,10vh,140px)]">
+      <div aria-hidden className="pointer-events-none absolute -left-[280px] bottom-[-10%] h-[680px] w-[680px] rounded-full bg-[radial-gradient(circle,rgba(221,250,108,0.12)_0%,transparent_62%)] blur-[90px]" />
+      <div className="relative mx-auto w-[min(1240px,100%-48px)]">
         <motion.header
           initial={{ opacity: 0, y: 36 }}
           whileInView={{ opacity: 1, y: 0 }}

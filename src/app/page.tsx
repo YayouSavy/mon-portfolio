@@ -4,7 +4,6 @@ import Nav from "../components/Nav";
 import Hero from "../components/Hero";
 import StatsNotes from "../components/StatsNotes";
 import About from "../components/About";
-import ChapterBreak from "../components/ChapterBreak";
 import Folders from "../components/Folders";
 import Skills from "../components/Skills";
 import Contact from "../components/Contact";
@@ -16,7 +15,6 @@ export default function Home() {
         <Hero />
         <StatsNotes />
         <About />
-        <ChapterBreak />
         <Folders />
         <Skills />
         <Contact />

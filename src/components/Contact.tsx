@@ -26,7 +26,7 @@ const LINKS: ContactLink[] = [
 
 export default function Contact() {
   return (
-    <footer id="contact" className="relative overflow-hidden border-t border-white/10 pt-[clamp(88px,13vh,170px)]">
+    <footer id="contact" className="relative overflow-hidden pt-[clamp(88px,13vh,170px)]">
       {/* Glow violet remontant du bas */}
       <div
         aria-hidden

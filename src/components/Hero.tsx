@@ -2,12 +2,9 @@
 // → Type : Client Component
 // → Raison : Framer Motion (stagger, entrée de la photo, flottement)
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import Tape from "./props/Tape";
-import Trombone from "./props/Trombone";
-import { ACCENT_STYLES } from "../lib/accent";
-import { TAGS, PROJECTS, type Accent } from "../lib/data";
+import { TAGS, type Accent } from "../lib/data";
 import { spring, springBouncy } from "../lib/motion";
 
 /* Règle stroke de la DA : surfaces claires → stroke noir, violettes → stroke blanc */
@@ -26,10 +23,6 @@ const line = {
   hidden: { y: "110%" },
   show: { y: "0%", transition: spring },
 };
-
-/* La pile derrière la couverture, dans l'ordre où on veut les voir dépasser */
-const BACKGROUND_TABS = PROJECTS.filter((p) => p.id !== "esim-boost");
-const TAB_TILT = ["rotate-[-3deg]", "rotate-[2deg]", "rotate-[-1.5deg]"];
 
 export default function Hero() {
   return (
@@ -59,8 +52,8 @@ export default function Hero() {
           </motion.p>
 
           <motion.p variants={item} className="mb-9 max-w-[540px] text-xl leading-normal text-mist">
-            Je conçois des applications web <strong className="font-semibold text-white">B2B</strong> riches en
-            données, de la recherche utilisateur à la delivery.
+            Je conçois des applications web riches en données, de la recherche utilisateur à la
+            delivery.
           </motion.p>
 
           <motion.div variants={item} className="flex flex-wrap items-center gap-4">
@@ -81,45 +74,14 @@ export default function Hero() {
               Télécharger le CV
             </a>
           </motion.div>
-
-          <motion.div variants={item} className="mt-8 flex flex-wrap gap-2.5">
-            {TAGS.map((t) => (
-              <span
-                key={t.label}
-                className={`relative inline-flex items-center rounded-full border-2 px-4 py-2 font-accent text-[11px] uppercase tracking-[0.06em] ${TAG_STYLE[t.color]}`}
-              >
-                {t.label}
-              </span>
-            ))}
-          </motion.div>
         </motion.div>
 
-        {/* ---- Colonne visuelle : pile de dossiers façon bureau, portrait épinglé dessus ----
-            Le portrait garde son cadre existant ; la nouveauté est la pile de dossiers qui
-            dépasse derrière, et l'étiquette du bas qui pointe vers le dossier phare. */}
-        <div className="group relative mx-auto w-full max-w-[480px]">
-          {/* Onglets des 3 autres dossiers qui dépassent derrière la couverture.
-              aria-hidden : simple teaser redondant, les mêmes titres sont décrits en entier
-              juste après dans #projets — pas besoin de les faire annoncer deux fois. */}
-          <div aria-hidden className="absolute inset-x-8 -top-9 z-0 flex justify-between gap-3">
-            {BACKGROUND_TABS.map((p, i) => {
-              const v = ACCENT_STYLES[p.color];
-              return (
-                <div
-                  key={p.id}
-                  className={`h-14 flex-1 rounded-t-xl border-2 border-b-0 px-3 pt-2.5 ${v.body} ${v.stroke} ${v.grain} ${TAB_TILT[i % TAB_TILT.length]}`}
-                >
-                  <span className="block truncate font-accent text-[9px] uppercase tracking-[0.08em]">{p.title}</span>
-                </div>
-              );
-            })}
-          </div>
-
+        {/* ---- Colonne photo : détourée sur aplat violet + pastilles compétences flottantes ---- */}
+        <div className="group relative mx-auto w-full max-w-[560px]">
           <motion.div
             initial={{ opacity: 0, y: 52, rotate: -6, scale: 0.86 }}
             animate={{ opacity: 1, y: 0, rotate: 0, scale: 1 }}
             transition={{ ...springBouncy, delay: 0.15 }}
-            className="relative z-[1]"
           >
             {/* La rotation de repos (-2°) est en CSS pour ne pas entrer en
                 conflit avec les transforms Framer du parent */}
@@ -134,7 +96,7 @@ export default function Hero() {
                       alt="Portrait d'Illiana Savy, Product Designer"
                       fill
                       priority
-                      sizes="(min-width: 1024px) 460px, 90vw"
+                      sizes="(min-width: 1024px) 520px, 90vw"
                       className="object-contain object-bottom"
                     />
                   </div>
@@ -143,18 +105,28 @@ export default function Hero() {
 
               <Tape className="-left-[22px] -top-1.5 -rotate-[38deg]" />
               <Tape color="paper" className="-bottom-1 -right-6 -rotate-[36deg]" />
-              <Trombone className="-top-6 right-[18%] rotate-[9deg]" />
             </div>
-
-            {/* Étiquette dossier du bas : pointe vers le dossier phare, pas un vague survol */}
-            <Link
-              href="/projets/esim-boost"
-              className="light-surface grain-multiply relative z-[1] mt-5 flex items-center justify-between gap-3 rounded-folder border-2 border-noir bg-lime px-6 py-4 font-accent text-[11px] uppercase tracking-[0.08em] text-ink shadow-paper transition-transform duration-300 ease-spring hover:-translate-y-0.5"
-            >
-              Dossier 01 · eSIM Boost
-              <span aria-hidden>↗</span>
-            </Link>
           </motion.div>
+
+          {/* Pastilles : inline sur mobile, épinglées autour de la photo en lg
+              (lg:contents = les enfants se positionnent par rapport à la photo) */}
+          <div className="mt-6 flex flex-wrap gap-3.5 lg:contents">
+            {TAGS.map((t, i) => (
+              <motion.span
+                key={t.label}
+                initial={{ opacity: 0, y: 30, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ ...springBouncy, delay: 0.55 + i * 0.08 }}
+                className={`relative z-[6] inline-flex whitespace-nowrap rounded-full border-2 px-8 py-4 font-accent text-[15px] uppercase tracking-[0.06em] transition-transform duration-300 ease-spring hover:scale-110 group-hover:!rotate-0 lg:absolute ${TAG_STYLE[t.color]} ${t.pos}`}
+              >
+                {t.label}
+                <span
+                  aria-hidden
+                  className={`pointer-events-none absolute inset-0 rounded-full bg-[image:var(--grain)] opacity-30 ${t.color === "violet" ? "mix-blend-overlay" : "mix-blend-multiply"}`}
+                />
+              </motion.span>
+            ))}
+          </div>
         </div>
       </div>
     </section>

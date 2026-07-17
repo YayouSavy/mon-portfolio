@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Krona_One } from "next/font/google";
 import MotionProvider from "../components/MotionProvider";
+import FolderTransitionProvider from "../components/FolderTransition";
 import "./globals.css";
 
 /* Les deux typos imposées de la DA, chargées par next/font (zéro flash) */
@@ -27,7 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" className="scroll-smooth">
       <body className={`${bricolage.variable} ${krona.variable} overflow-x-hidden bg-noir font-display text-lg text-mist antialiased`}>
         <a href="#about" className="skip-link">Aller au contenu</a>
-        <MotionProvider>{children}</MotionProvider>
+        <MotionProvider>
+          <FolderTransitionProvider>{children}</FolderTransitionProvider>
+        </MotionProvider>
       </body>
     </html>
   );
