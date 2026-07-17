@@ -1,0 +1,110 @@
+/* ============================================================
+   TAILWIND · v4 par défaut (create-next-app@latest).
+   Si ton projet est en v3 (ton ancien fichier commençait par
+   "@tailwind base;"), commente la ligne @import ci-dessous,
+   décommente les 3 directives, et garde tailwind.config.ts.
+   ============================================================ */
+@import "tailwindcss";
+
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+/* ============================================================
+   TOKENS · chaque variable devient une classe utilitaire :
+   bg-noir, text-lime, border-violet, rounded-folder,
+   shadow-paper, ease-spring, font-display, font-accent...
+   (en v3, ces tokens sont déclarés dans tailwind.config.ts)
+   ============================================================ */
+@theme {
+  --color-noir:   #131313;
+  --color-ink:    #30380D;
+  --color-lime:   #DDFA6C;
+  --color-violet: #642AEE;
+  --color-paper:  #FBFBFB;
+  --color-mist:   #EFEFEF;
+
+  --radius-folder: 24px;
+
+  --shadow-paper:      0 2px 0 rgba(0,0,0,0.45), 0 16px 28px -8px rgba(0,0,0,0.55);
+  --shadow-paper-lift: 0 4px 0 rgba(0,0,0,0.4),  0 28px 44px -10px rgba(0,0,0,0.6);
+
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-soft:   cubic-bezier(0.22, 1, 0.36, 1);
+
+  --font-display: var(--font-bricolage), system-ui, sans-serif;
+  --font-accent:  var(--font-krona), system-ui, sans-serif;
+}
+
+:root {
+  /* Texture papier : bruit fractal, la même que sur le CV */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Grain papier global : fixe, non interactif, jamais sur un conteneur scrollable */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 90;
+}
+
+/* Focus visible : lime sur fond sombre, violet sur les surfaces claires */
+:focus-visible {
+  outline: 3px solid #DDFA6C;
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.light-surface :focus-visible { outline-color: #642AEE; }
+
+.skip-link {
+  position: absolute; left: 24px; top: -80px; z-index: 200;
+  background: #DDFA6C; color: #30380D;
+  font-weight: 700; padding: 12px 24px; border-radius: 999px;
+  transition: top 0.3s var(--ease-soft);
+}
+.skip-link:focus-visible { top: 16px; }
+
+/* ============================================================
+   TEXTURE PAPIER en pseudo-élément.
+   Le parent doit être en position: relative (classe "relative").
+   grain-strong = dossiers · grain-multiply = fiches, post-its
+   grain-overlay = surfaces violettes · grain-soft = photo
+   ============================================================ */
+.grain-strong::after,
+.grain-multiply::after,
+.grain-overlay::after,
+.grain-soft::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--grain);
+  pointer-events: none;
+}
+.grain-strong::after   { opacity: 0.5;  mix-blend-mode: multiply; }
+.grain-multiply::after { opacity: 0.42; mix-blend-mode: multiply; }
+.grain-overlay::after  { opacity: 0.3;  mix-blend-mode: overlay; }
+.grain-soft::after     { opacity: 0.14; mix-blend-mode: overlay; }
+
+/* ============================================================
+   OMBRE DES DOSSIERS · drop-shadow (filter) pour épouser la
+   silhouette onglet + corps + trombone, contrairement à box-shadow.
+   ============================================================ */
+.sheet {
+  filter: drop-shadow(0 2px 0 rgba(0,0,0,0.5)) drop-shadow(0 16px 24px rgba(0,0,0,0.5));
+  transition: filter 0.45s var(--ease-spring);
+}
+.sheet[data-lift="true"] {
+  filter: drop-shadow(0 4px 0 rgba(0,0,0,0.45)) drop-shadow(0 30px 40px rgba(0,0,0,0.6));
+}
+
+/* Framer Motion gère le reduced-motion via <MotionConfig reducedMotion="user">.
+   Ce bloc couvre le reste (transitions CSS de confort). */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  .sheet, .skip-link { transition: none; }
+}
