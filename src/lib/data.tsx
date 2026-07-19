@@ -11,6 +11,16 @@ export const TAGS: { label: string; color: Accent; pos: string }[] = [
   { label: "Anglais C1",            color: "violet", pos: "lg:-bottom-8 lg:left-[14%] lg:rotate-[6deg]" },
 ];
 
+/* ---- Pastilles "hors des écrans" · About, sous la fiche identité ---- */
+export const PERSONAL_TAGS: { label: string; color: Accent }[] = [
+  { label: "Mode", color: "lime" },
+  { label: "Design graphique", color: "violet" },
+  { label: "Broderie", color: "lime" },
+  { label: "Jeux vidéo", color: "violet" },
+  { label: "Mangas", color: "lime" },
+  { label: "Déco d'intérieur", color: "violet" },
+];
+
 /* ---- Post-its chiffres · chacun pointe vers le dossier qui porte le chiffre ---- */
 export const STATS: { num: string; label: string; color: Accent; rot: string; tape: "lime" | "paper"; projectId?: string }[] = [
   { num: "6 → 2", label: "mois de cycle de conception, grâce à un agent IA de design-to-code", color: "lime",   rot: "-rotate-3", tape: "paper", projectId: "design-system-ia" },
@@ -46,6 +56,7 @@ export type Project = {
   learnings?: string;      // ce que ça m'a appris
   ndaNote?: string;        // note de confidentialité, assumée
   cover: Visual;           // visuel principal — réutilisé en vignette ET en page
+  placeholders?: { label: string; body?: string }[]; // dossier "soon" : sections à rédiger plus tard
   metrics: { num: string; label: string }[];
   chips: string[];
   tabMl: string;  // décalage de l'onglet
@@ -217,6 +228,12 @@ export const PROJECTS: Project[] = [
     role: "",
     desc: "Ce dossier est en cours de rédaction — je préfère publier des indicateurs vérifiés plutôt qu'approximatifs.",
     cover: { kind: "comingSoon" },
+    placeholders: [
+      { label: "La demande" },
+      { label: "La recherche menée" },
+      { label: "Les itérations" },
+      { label: "La présentation du produit final" },
+    ],
     metrics: [],
     chips: [],
     tabMl: "ml-5 md:ml-[54%] lg:ml-[76%]",

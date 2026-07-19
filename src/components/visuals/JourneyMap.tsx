@@ -10,7 +10,7 @@ export default function JourneyMap({ stages, className = "" }: { stages: string[
         {stages.map((stage, i) => (
           <li key={stage} className="flex items-center gap-3">
             <span className="flex items-center gap-2 rounded-full border-2 border-noir bg-lime px-4 py-2 text-xs font-semibold">
-              <span aria-hidden className="text-[10px] opacity-60">
+              <span aria-hidden className="text-[10px] opacity-75">
                 {String(i + 1).padStart(2, "0")}
               </span>
               {stage}

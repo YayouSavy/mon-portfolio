@@ -20,7 +20,7 @@ export default function VisualCard({
       className={`light-surface grain-multiply relative overflow-hidden rounded-folder border-2 border-noir bg-paper p-5 text-ink shadow-paper md:p-7 ${className}`}
     >
       {eyebrow && (
-        <p className="relative z-[1] mb-4 font-accent text-[10px] uppercase tracking-[0.1em] opacity-60">{eyebrow}</p>
+        <p className="relative z-[1] mb-4 font-accent text-[10px] uppercase tracking-[0.1em] opacity-70">{eyebrow}</p>
       )}
       <div className="relative z-[1]">{children}</div>
     </div>

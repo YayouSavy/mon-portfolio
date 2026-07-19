@@ -27,7 +27,7 @@ export default function MockupAbstract({
         <div>
           <div className="mb-2.5 grid grid-cols-4 gap-2">
             {labels.map((l) => (
-              <p key={l} className="truncate font-accent text-[9px] uppercase tracking-[0.06em] opacity-60">
+              <p key={l} className="truncate font-accent text-[9px] uppercase tracking-[0.06em] opacity-70">
                 {l}
               </p>
             ))}

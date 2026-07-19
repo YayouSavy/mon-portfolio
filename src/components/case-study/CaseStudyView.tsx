@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Tape from "../props/Tape";
 import VisualRenderer from "../visuals/VisualRenderer";
+import EriosPreview from "./erios/EriosPreview";
 import { ACCENT_STYLES } from "../../lib/accent";
 import type { Project } from "../../lib/data";
 import { spring, viewport } from "../../lib/motion";
@@ -45,7 +46,22 @@ export default function CaseStudyView({
           </h1>
           <p className="mb-10 max-w-[54ch] text-xl leading-relaxed text-mist">{project.desc}</p>
 
-          <VisualRenderer visual={project.cover} className="max-w-[520px]" />
+          {project.id === "erios" ? <EriosPreview /> : <VisualRenderer visual={project.cover} className="max-w-[520px]" />}
+
+          {project.placeholders && project.placeholders.length > 0 && (
+            <div className="mt-14 grid gap-5 sm:grid-cols-2">
+              {project.placeholders.map((ph) => (
+                <div key={ph.label} className="rounded-folder border-2 border-dashed border-white/20 p-6">
+                  <p className="mb-2 font-accent text-[11px] uppercase tracking-[0.08em] text-lime">{ph.label}</p>
+                  {ph.body ? (
+                    <p className="text-[15px] leading-relaxed text-mist">{ph.body}</p>
+                  ) : (
+                    <p className="text-[15px] italic leading-relaxed text-mist/50">À rédiger.</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
 
           <div className="mt-12 flex flex-wrap gap-4">
             <Link
