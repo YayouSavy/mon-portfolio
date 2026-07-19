@@ -59,7 +59,7 @@ export default function About() {
             <div className="relative z-[1] mb-6 flex flex-col gap-7 sm:flex-row sm:items-start">
               <div className="relative w-[172px] shrink-0 -rotate-[2.5deg]">
                 <div className="relative aspect-[1/1.05] overflow-hidden rounded-2xl border-[3px] border-noir bg-lime">
-                  <Image src="/portrait.png" alt="" fill sizes="172px" className="object-contain object-bottom" />
+                  <Image src="/portrait.png" alt="" fill quality={95} sizes="172px" className="object-contain object-bottom" />
                 </div>
                 <Tape label="( about me )" className="-bottom-3 -left-4 -rotate-[8deg]" />
               </div>

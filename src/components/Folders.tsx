@@ -3,6 +3,7 @@
 // → Raison : état ouvert/fermé, hover Framer, animation de hauteur
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Plus } from "lucide-react";
 import SectionTitle, { Outline } from "./SectionTitle";
@@ -14,6 +15,24 @@ import { spring, springSmooth, viewport } from "../lib/motion";
 
 /* Léger effet collage sur les dossiers fermés — neutralisé dès qu'un dossier s'ouvre */
 const REST_ROTATE = [-0.6, 0.5, -0.4, 0.6];
+
+/* Vignette qui dépasse de l'onglet : une vraie image quand le dossier en a une
+   (ex. Erios), sinon le bloc couleur générique. Repli auto si l'image manque encore. */
+function FolderPeek({ p, expanded }: { p: Project; expanded: boolean }) {
+  const [imgFailed, setImgFailed] = useState(false);
+  const v = ACCENT_STYLES[p.color];
+  const base = `absolute -top-7 left-3 h-16 w-[92px] -rotate-2 rounded-t-xl border-2 border-b-0 opacity-95 transition-opacity duration-300 ${p.tabMl} ${expanded ? "opacity-0" : ""}`;
+
+  if (p.cover.kind === "photo" && !imgFailed) {
+    return (
+      <div className={`${base} overflow-hidden ${v.stroke}`}>
+        <Image src={p.cover.src} alt="" fill sizes="92px" className="object-cover object-top" onError={() => setImgFailed(true)} />
+      </div>
+    );
+  }
+
+  return <div aria-hidden className={`${base} ${v.body} ${v.stroke} ${v.grain}`} />;
+}
 
 function Folder({ p, index, open, onToggle }: { p: Project; index: number; open: boolean; onToggle: () => void }) {
   const [hovered, setHovered] = useState(false);
@@ -34,13 +53,7 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
         if (e.key === "Escape" && open) onToggle();
       }}
     >
-      {/* Vignette qui dépasse de l'onglet : le coffre a l'air plein même fermé.
-          Décalage horizontal aligné sur celui de l'onglet (p.tabMl) pour qu'elle
-          semble sortir du bon onglet plutôt que d'un point fixe. */}
-      <div
-        aria-hidden
-        className={`absolute -top-7 left-3 h-16 w-[92px] -rotate-2 rounded-t-xl border-2 border-b-0 opacity-95 transition-opacity duration-300 ${v.body} ${v.stroke} ${v.grain} ${p.tabMl} ${expanded ? "opacity-0" : ""}`}
-      />
+      <FolderPeek p={p} expanded={expanded} />
 
       {/* Le soulèvement du dossier, en spring punchy + léger collage au repos */}
       <motion.div

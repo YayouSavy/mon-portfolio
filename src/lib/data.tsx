@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import PlaceholderList from "../components/case-study/PlaceholderList";
 
 export type Accent = "lime" | "violet" | "paper" | "mist";
 
@@ -36,14 +37,15 @@ export type Visual =
   | { kind: "journey"; stages: string[] }
   | { kind: "tokens" }
   | { kind: "beforeAfter"; from: string; to: string; curveTo: string }
-  | { kind: "comingSoon" };
+  | { kind: "comingSoon" }
+  | { kind: "photo"; src: string; alt: string };
 
 export type ProcessStep = { title: string; body: string; visual: Visual };
 
 /* ---- Dossiers projets ---- */
 export type Project = {
   id: string;
-  status: "live" | "soon";
+  status: "live" | "soon" | "preview"; // preview = contenu réel, mise en page allégée (ex. projet en évolution)
   color: Accent;
   tab: string;
   title: string;
@@ -56,7 +58,7 @@ export type Project = {
   learnings?: string;      // ce que ça m'a appris
   ndaNote?: string;        // note de confidentialité, assumée
   cover: Visual;           // visuel principal — réutilisé en vignette ET en page
-  placeholders?: { label: string; body?: string }[]; // dossier "soon" : sections à rédiger plus tard
+  placeholders?: { label: string; body?: ReactNode }[]; // sections riches, rédigées ou à rédiger plus tard
   metrics: { num: string; label: string }[];
   chips: string[];
   tabMl: string;  // décalage de l'onglet
@@ -220,22 +222,119 @@ export const PROJECTS: Project[] = [
   },
   {
     id: "erios",
-    status: "soon",
+    status: "preview",
     color: "mist",
-    tab: "Dossier 04 · À venir",
+    tab: "Dossier 04 · Application mobile",
     title: "Erios",
-    meta: "Étude de cas en préparation",
+    meta: "Projet de Master · Application mobile",
     role: "",
-    desc: "Ce dossier est en cours de rédaction — je préfère publier des indicateurs vérifiés plutôt qu'approximatifs.",
-    cover: { kind: "comingSoon" },
+    desc: (
+      <>
+        Application mobile d&apos;éducation sexuelle pour les 15-18 ans, conçue par une équipe de{" "}
+        <strong>11 étudiants</strong> en Master — recherche terrain, chatbot IA et contenus pensés
+        pour lever les tabous.
+      </>
+    ),
+    cover: { kind: "photo", src: "/erios/home.png", alt: "Écran d'accueil de l'application Erios" },
     placeholders: [
-      { label: "La demande" },
-      { label: "La recherche menée" },
-      { label: "Les itérations" },
-      { label: "La présentation du produit final" },
+      {
+        label: "La demande",
+        body: (
+          <>
+            <p className="mb-4">
+              Erios est un projet de start-up porté par 11 étudiants en Master Information-Communication
+              et Création Numérique. La demande initiale répondait à un constat : le manque criant
+              d&apos;éducation sexuelle complète et fiable pour les adolescents français, aggravé par le
+              non-respect de l&apos;obligation légale de trois séances annuelles d&apos;éducation
+              sexuelle à l&apos;école (seulement 13 % des séances prévues sont réellement dispensées) et
+              par un tabou persistant qui empêche les jeunes de poser librement leurs questions, que ce
+              soit en classe ou en famille.
+            </p>
+            <p className="mb-3">L&apos;objectif fixé était de concevoir une application mobile capable de :</p>
+            <PlaceholderList
+              items={[
+                "Fournir une information fiable, complète et adaptée à l'âge des adolescents (15-18 ans)",
+                "Couvrir des thématiques souvent négligées par l'école (psycho-émotionnel, consentement, identités de genre, orientations sexuelles)",
+                "Créer un espace anonyme et sans jugement pour permettre aux jeunes de poser toutes leurs questions",
+              ]}
+            />
+          </>
+        ),
+      },
+      {
+        label: "La recherche menée",
+        body: (
+          <>
+            <p className="mb-3">
+              L&apos;équipe a mené une enquête quantitative auprès de 35 répondants (principalement des
+              femmes de 16-18 ans, profils sociaux variés) pour valider ses hypothèses. Les résultats ont
+              confirmé plusieurs constats clés :
+            </p>
+            <PlaceholderList
+              items={[
+                "17,1 % des répondants n'ont jamais eu de cours d'éducation sexuelle",
+                "76 % jugent l'éducation sexuelle à l'école insuffisante (étude OpinionWay / La Maison des Femmes)",
+                "Plus de la moitié des jeunes n'osent pas poser toutes leurs questions en cours",
+                "45,7 % ne peuvent pas parler de sexualité avec leur famille",
+                "Seulement 14,3 % feraient entièrement confiance à une IA pour des questions intimes — un point critique qui a orienté la stratégie produit (nécessité d'une mascotte pour humaniser le chatbot)",
+              ]}
+            />
+            <p className="mt-4">
+              Cette recherche a été complétée par une analyse concurrentielle (Hello Clito, Tumeplay,
+              Sacha, Chababi Jouwa, etc.), une étude SWOT, un benchmark sectoriel et la construction de 4
+              personas (Léo, Heidi, Tom, Fara) représentant la diversité des profils et besoins ciblés.
+            </p>
+          </>
+        ),
+      },
+      {
+        label: "Les itérations",
+        body: (
+          <>
+            <p className="mb-3">
+              Le projet a connu plusieurs évolutions majeures suite aux retours obtenus (enseignants,
+              jury, utilisateurs) :
+            </p>
+            <PlaceholderList
+              items={[
+                "Changement de nom : « Sexploration » → « Érios » (acronyme Éducation, Respect, Intimité, Ouverture, Sexualité), jugé plus neutre, inclusif et professionnel, sur recommandation de professeurs",
+                "Recentrage de la cible : passage d'un public large à une cible précise de 15-18 ans, permettant un contenu plus ciblé (quiz, jeux adaptés)",
+                "Refonte de la partie marketing de la note d'intention suite aux retours qualité",
+                "Ajustement de l'équipe après le départ d'un membre du pôle marketing",
+                "Méthodologie Agile appliquée tout au long du projet (sprints de 2 semaines, priorisation MoSCoW, communication via WhatsApp par pôles) pour intégrer rapidement les retours utilisateurs et jury",
+              ]}
+            />
+          </>
+        ),
+      },
+      {
+        label: "La présentation du produit final",
+        body: (
+          <>
+            <p className="mb-3">
+              Erios est une application mobile (iOS/Android, développée en React Native) et un site
+              vitrine (HTML/CSS/JS) dédiés à l&apos;éducation sexuelle des adolescents de 15 à 18 ans.
+            </p>
+            <p className="mb-3">Fonctionnalités clés :</p>
+            <PlaceholderList
+              items={[
+                "Éri, un chatbot IA (basé sur le modèle Phi2 via Ollama) incarné par une mascotte, disponible 24/7, anonyme et non-jugeant, entraîné sur des données validées par des professionnels de santé",
+                "Contenus éducatifs sous forme d'articles, infographies et vidéos couvrant biologie, contraception, orientation sexuelle, identité de genre, relations, bien-être, droits et législation",
+                "Jeux et quiz interactifs (textes à trous, histoires immersives) avec système de gamification (badges, niveaux, progression)",
+                "Carte interactive pour localiser les services de santé sexuelle à proximité",
+                "Ressources dédiées aux victimes de violences ou harcèlement",
+              ]}
+            />
+          </>
+        ),
+      },
     ],
-    metrics: [],
-    chips: [],
+    metrics: [
+      { num: "35", label: "répondants à l'enquête quantitative" },
+      { num: "11", label: "étudiant·e·s dans l'équipe projet" },
+      { num: "4", label: "personas construits pour cadrer les besoins" },
+    ],
+    chips: ["Projet d'équipe", "App mobile", "Éducation"],
     tabMl: "ml-5 md:ml-[54%] lg:ml-[76%]",
     z: "z-[4]",
   },

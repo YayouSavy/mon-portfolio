@@ -90,6 +90,7 @@ export default function Hero() {
                       alt="Portrait d'Illiana Savy, Product Designer"
                       fill
                       priority
+                      quality={95}
                       sizes="(min-width: 1024px) 520px, 90vw"
                       className="object-contain object-bottom"
                     />
