@@ -23,7 +23,7 @@ export default function StatsNotes() {
         {STATS.map((s, i) => {
           const project = s.projectId ? PROJECTS.find((p) => p.id === s.projectId) : undefined;
           const href = project ? `/projets/${project.id}` : "#projets";
-          const label = `${s.num} : ${s.label}${project ? ` — voir le dossier ${project.title}` : " — voir les dossiers"}`;
+          const label = `${s.num} : ${s.label}${project ? ` (voir le dossier ${project.title})` : " (voir les dossiers)"}`;
 
           return (
             <MotionLink

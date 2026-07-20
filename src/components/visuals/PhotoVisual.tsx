@@ -5,7 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { ImageOff } from "lucide-react";
 
-/** Vraie image de projet (pas une reconstitution) — repli discret si le fichier manque encore. */
+/** Vraie image de projet (pas une reconstitution), repli discret si le fichier manque encore. */
 export default function PhotoVisual({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
   const [failed, setFailed] = useState(false);
 

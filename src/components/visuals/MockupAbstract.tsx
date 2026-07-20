@@ -4,7 +4,7 @@ import VisualCard from "./VisualCard";
 
 /**
  * Reconstitution générique d'une UI dense (eSIM Boost) ou d'un composant codé
- * (Design-to-code) : structure réelle, données et libellés fictifs — NDA-safe.
+ * (Design-to-code) : structure réelle, données et libellés fictifs, NDA-safe.
  */
 export default function MockupAbstract({
   density,

@@ -68,7 +68,7 @@ export default function CaseStudyView({
   }
 
   // "preview" : contenu réel, mise en page plus légère que le gabarit "live"
-  // (process/decisions pas encore structurés en 3 étapes propres) — cas d'Erios aujourd'hui.
+  // (process/decisions pas encore structurés en 3 étapes propres), cas d'Erios aujourd'hui.
   if (project.status === "preview") {
     return (
       <article className="pb-[clamp(72px,10vh,140px)] pt-[clamp(48px,7vh,88px)]">
@@ -200,9 +200,11 @@ export default function CaseStudyView({
                   viewport={viewport}
                   transition={{ ...spring, delay: i * 0.1 }}
                 >
-                  <div className={ROT[i % ROT.length]}>
-                    <VisualRenderer visual={step.visual} />
-                  </div>
+                  {step.visual && (
+                    <div className={ROT[i % ROT.length]}>
+                      <VisualRenderer visual={step.visual} />
+                    </div>
+                  )}
                   <h3 className="mb-2 mt-5 text-xl font-bold tracking-[-0.01em] text-white">
                     {String(i + 1).padStart(2, "0")} · {step.title}
                   </h3>

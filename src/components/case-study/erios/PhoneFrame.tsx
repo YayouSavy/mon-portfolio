@@ -2,7 +2,7 @@
 // → Raison : chrome décoratif pur, l'état interactif vit dans EriosPreview
 import type { ReactNode } from "react";
 
-/** Coque de téléphone générique — contenu scrollable à l'intérieur. */
+/** Coque de téléphone générique, contenu scrollable à l'intérieur. */
 export default function PhoneFrame({ children }: { children: ReactNode }) {
   return (
     <div className="relative mx-auto w-[300px] max-w-full">

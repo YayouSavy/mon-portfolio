@@ -1,5 +1,5 @@
 // → Type : Server Component
-// → Raison : pas d'état — le sous-menu Projets s'appuie sur <details> natif
+// → Raison : pas d'état, le sous-menu Projets s'appuie sur <details> natif
 import Link from "next/link";
 import { PROJECTS } from "../lib/data";
 
@@ -48,12 +48,29 @@ export default function Nav() {
           </Link>
         </nav>
 
-        <Link
-          href="#contact"
-          className="rounded-full bg-lime px-7 py-3.5 text-[15px] font-semibold text-ink transition-all duration-300 ease-spring hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0_#642AEE] active:scale-95"
-        >
-          Contact
-        </Link>
+        <div className="flex items-center gap-4">
+          {/* Switch FR/EN désactivé : en place en amont de la traduction, à activer quand les textes anglais arrivent */}
+          <div
+            role="group"
+            aria-label="Langue du site (anglais bientôt disponible)"
+            title="Anglais bientôt disponible"
+            className="hidden items-center gap-0.5 rounded-full border-2 border-white/10 p-1 font-accent text-[11px] tracking-[0.06em] md:flex"
+          >
+            <span aria-current="true" className="rounded-full bg-white/10 px-3 py-1.5 text-white">
+              FR
+            </span>
+            <button type="button" disabled aria-disabled="true" className="cursor-not-allowed px-3 py-1.5 text-mist/40">
+              EN
+            </button>
+          </div>
+
+          <Link
+            href="#contact"
+            className="rounded-full bg-lime px-7 py-3.5 text-[15px] font-semibold text-ink transition-all duration-300 ease-spring hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[4px_4px_0_#642AEE] active:scale-95"
+          >
+            Contact
+          </Link>
+        </div>
       </div>
     </header>
   );

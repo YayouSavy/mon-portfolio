@@ -11,7 +11,7 @@ const SWATCHES = [
 
 const SPACING = [4, 8, 12, 16, 24];
 
-/** Mini fiche de tokens : couleurs, échelle typo, échelle d'espacement — libellés génériques. */
+/** Mini fiche de tokens : couleurs, échelle typo, échelle d'espacement (libellés génériques). */
 export default function DSTokenSheet({ className = "" }: { className?: string }) {
   return (
     <VisualCard eyebrow="Fiche tokens" className={className}>

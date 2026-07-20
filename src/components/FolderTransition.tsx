@@ -96,7 +96,7 @@ export default function FolderTransitionProvider({ children }: { children: React
 
   // Le vrai signal de "la page est arrivée" : le pathname a changé pour de bon,
   // pas un délai deviné à l'avance (qui casse dès que le rendu de la page prend
-  // plus de temps que prévu — build de dev à froid, page plus lourde, etc.).
+  // plus de temps que prévu (build de dev à froid, page plus lourde, etc.).
   useEffect(() => {
     if (phaseRef.current === "covering" && coverReadyRef.current && pathname === targetPathRef.current) {
       timersRef.current.push(window.setTimeout(reveal, PAINT_BUFFER_MS));

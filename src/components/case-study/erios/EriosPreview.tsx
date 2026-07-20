@@ -9,8 +9,9 @@ import PhoneFrame from "./PhoneFrame";
 
 const SCREENS = [
   { src: "/erios/home.png", alt: "Accueil Erios : niveau, mini-jeux, quiz du jour" },
-  { src: "/erios/profile.png", alt: "Profil Erios : badges, succès, textes à trou" },
+  { src: "/erios/chatbot.png", alt: "Éri, le chatbot IA d'Erios, pour poser ses questions anonymement" },
   { src: "/erios/lesson.png", alt: "Fiche Erios sur le consentement" },
+  { src: "/erios/games.png", alt: "Mini-jeux et quiz interactifs de l'application Erios" },
 ];
 
 function Screen({ src, alt }: { src: string; alt: string }) {
@@ -20,7 +21,7 @@ function Screen({ src, alt }: { src: string; alt: string }) {
     return (
       <div className="grid h-full place-items-center gap-2 bg-[#FBF1E8] text-[#242F63]/50">
         <ImageOff aria-hidden size={22} strokeWidth={1.75} />
-        <p className="text-xs">Capture à venir — dépose {src} dans public{src}</p>
+        <p className="text-xs">Capture à venir, dépose {src} dans public{src}</p>
       </div>
     );
   }
@@ -37,7 +38,7 @@ function Screen({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-/** Vraies captures d'écran d'Erios, feuilletables — pas de reconstitution. */
+/** Vraies captures d'écran d'Erios, feuilletables (pas de reconstitution). */
 export default function EriosPreview() {
   const [index, setIndex] = useState(0);
   const screen = SCREENS[index];

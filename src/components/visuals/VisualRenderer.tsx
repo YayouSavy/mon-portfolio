@@ -8,8 +8,9 @@ import DSTokenSheet from "./DSTokenSheet";
 import BeforeAfterAdoption from "./BeforeAfterAdoption";
 import ComingSoonPanel from "./ComingSoonPanel";
 import PhotoVisual from "./PhotoVisual";
+import DiagramVisual from "./DiagramVisual";
 
-/** Un seul point d'entrée pour rendre un `Visual` — utilisé par Folders, Hero et la page dossier. */
+/** Un seul point d'entrée pour rendre un `Visual` (utilisé par Folders, Hero et la page dossier). */
 export default function VisualRenderer({ visual, className = "" }: { visual: Visual; className?: string }) {
   switch (visual.kind) {
     case "pipeline":
@@ -26,5 +27,7 @@ export default function VisualRenderer({ visual, className = "" }: { visual: Vis
       return <ComingSoonPanel className={className} />;
     case "photo":
       return <PhotoVisual src={visual.src} alt={visual.alt} className={className} />;
+    case "diagram":
+      return <DiagramVisual src={visual.src} alt={visual.alt} eyebrow={visual.eyebrow} className={className} />;
   }
 }

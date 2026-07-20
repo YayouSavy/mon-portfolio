@@ -13,25 +13,40 @@ import { ACCENT_STYLES } from "../lib/accent";
 import { PROJECTS, type Project } from "../lib/data";
 import { spring, springSmooth, viewport } from "../lib/motion";
 
-/* Léger effet collage sur les dossiers fermés — neutralisé dès qu'un dossier s'ouvre */
+/* Léger effet collage sur les dossiers fermés, neutralisé dès qu'un dossier s'ouvre */
 const REST_ROTATE = [-0.6, 0.5, -0.4, 0.6];
 
-/* Vignette qui dépasse de l'onglet : une vraie image quand le dossier en a une
-   (ex. Erios), sinon le bloc couleur générique. Repli auto si l'image manque encore. */
+/* Vignette qui dépasse de l'onglet : posée comme un Polaroid sur le dossier
+   (bord papier, pas un prolongement du dossier). Vraie image quand le dossier
+   en a une (ex. Erios), sinon un aplat couleur avec le numéro du dossier.
+   Repli auto si l'image manque encore. */
 function FolderPeek({ p, expanded }: { p: Project; expanded: boolean }) {
   const [imgFailed, setImgFailed] = useState(false);
   const v = ACCENT_STYLES[p.color];
-  const base = `absolute -top-7 left-3 h-16 w-[92px] -rotate-2 rounded-t-xl border-2 border-b-0 opacity-95 transition-opacity duration-300 ${p.tabMl} ${expanded ? "opacity-0" : ""}`;
+  const number = p.tab.match(/\d+/)?.[0] ?? "";
+  const cover = p.cover;
+  const base = `absolute -top-7 left-3 h-20 w-[74px] -rotate-[6deg] overflow-hidden rounded-2xl border-[3px] border-noir bg-paper opacity-95 shadow-paper transition-opacity duration-300 ${p.tabMl} ${expanded ? "opacity-0" : ""}`;
 
-  if (p.cover.kind === "photo" && !imgFailed) {
-    return (
-      <div className={`${base} overflow-hidden ${v.stroke}`}>
-        <Image src={p.cover.src} alt="" fill sizes="92px" className="object-cover object-top" onError={() => setImgFailed(true)} />
-      </div>
-    );
-  }
+  if (p.peek === false) return null;
 
-  return <div aria-hidden className={`${base} ${v.body} ${v.stroke} ${v.grain}`} />;
+  return (
+    <div aria-hidden className={`${base} grain-soft`}>
+      {cover.kind === "photo" && !imgFailed ? (
+        <Image
+          src={cover.src}
+          alt=""
+          fill
+          sizes="74px"
+          className="object-cover object-top"
+          onError={() => setImgFailed(true)}
+        />
+      ) : (
+        <div className={`flex h-full w-full items-start justify-center pt-3 ${v.body}`}>
+          <span className="font-accent text-lg">{number}</span>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function Folder({ p, index, open, onToggle }: { p: Project; index: number; open: boolean; onToggle: () => void }) {
@@ -112,7 +127,10 @@ function Folder({ p, index, open, onToggle }: { p: Project; index: number; open:
                 className="px-6 pb-8 md:px-10 md:pb-11"
               >
                 <div className="mb-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-                  <p className="max-w-[62ch] text-lg leading-relaxed">{p.desc}</p>
+                  <div className="max-w-[62ch]">
+                    <p className="text-lg leading-relaxed">{p.desc}</p>
+                    {p.panelNote && <div className="mt-5 text-[15.5px] font-medium leading-relaxed">{p.panelNote}</div>}
+                  </div>
                   <VisualRenderer visual={p.cover} className="max-w-[380px] lg:ml-auto" />
                 </div>
 
@@ -175,7 +193,7 @@ export default function Folders() {
             Les <Outline>dossiers</Outline>
           </SectionTitle>
           <p className="text-lg text-mist">
-            Chaque dossier couvre la recherche, les arbitrages et les résultats — pas un teaser.
+            Chaque dossier couvre la recherche, les arbitrages et les résultats, pas un teaser.
             Survolez ou touchez pour l&apos;ouvrir.
           </p>
         </motion.header>

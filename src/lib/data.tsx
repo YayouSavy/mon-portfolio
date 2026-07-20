@@ -38,9 +38,10 @@ export type Visual =
   | { kind: "tokens" }
   | { kind: "beforeAfter"; from: string; to: string; curveTo: string }
   | { kind: "comingSoon" }
-  | { kind: "photo"; src: string; alt: string };
+  | { kind: "photo"; src: string; alt: string }
+  | { kind: "diagram"; src: string; alt: string; eyebrow?: string };
 
-export type ProcessStep = { title: string; body: string; visual: Visual };
+export type ProcessStep = { title: string; body: string; visual?: Visual };
 
 /* ---- Dossiers projets ---- */
 export type Project = {
@@ -50,14 +51,16 @@ export type Project = {
   tab: string;
   title: string;
   meta: string;
-  role: string;            // énoncé précis du rôle — une seule fois, ici
+  role: string;            // énoncé précis du rôle, une seule fois, ici
   desc: ReactNode;         // teaser homepage (Folders fermé/survolé)
   context?: string;        // étude de cas : problème / contexte
   process?: ProcessStep[]; // étude de cas : 3 étapes avec visuel
   decisions?: string[];    // arbitrages assumés
   learnings?: string;      // ce que ça m'a appris
   ndaNote?: string;        // note de confidentialité, assumée
-  cover: Visual;           // visuel principal — réutilisé en vignette ET en page
+  cover: Visual;           // visuel principal, réutilisé en vignette ET en page
+  peek?: boolean;          // vignette Polaroid qui dépasse de l'onglet (Folders) ; false = aucune vignette
+  panelNote?: ReactNode;   // texte additionnel affiché sous desc, dans le panneau ouvert de Folders (à côté du visuel)
   placeholders?: { label: string; body?: ReactNode }[]; // sections riches, rédigées ou à rédiger plus tard
   metrics: { num: string; label: string }[];
   chips: string[];
@@ -73,7 +76,7 @@ export const PROJECTS: Project[] = [
     tab: "Dossier 01 · Web app télécoms",
     title: "eSIM Boost",
     meta: "Sélectionnée au Best of Thales Design",
-    role: "Seule designer produit, au sein d'une équipe de production composée d'un Product Manager, d'un PLM et de développeurs — de la recherche jusqu'à la delivery.",
+    role: "Seule designer produit, au sein d'une équipe de production composée d'un Product Manager, d'un PLM et de développeurs, de la recherche jusqu'à la delivery.",
     desc: (
       <>
         Web app de gestion eSIM, conçue de la discovery à la delivery en tant que{" "}
@@ -82,7 +85,7 @@ export const PROJECTS: Project[] = [
       </>
     ),
     context:
-      "Thales avait besoin d'une web app pour gérer le cycle de vie des eSIM (provisioning, activation, suivi, support). Les interfaces existantes étaient pensées pour des experts métier, pas pour la densité réelle du terrain — et sans designer senior pour doubler le poste.",
+      "Thales avait besoin d'une web app pour gérer le cycle de vie des eSIM (provisioning, activation, suivi, support). Les interfaces existantes étaient pensées pour des experts métier, pas pour la densité réelle du terrain, et sans designer senior pour doubler le poste.",
     process: [
       {
         title: "Recherche terrain",
@@ -101,12 +104,12 @@ export const PROJECTS: Project[] = [
       },
     ],
     decisions: [
-      "Prioriser la densité d'info utile plutôt que l'épure visuelle — les équipes terrain traitent des dizaines d'eSIM en simultané.",
+      "Prioriser la densité d'info utile plutôt que l'épure visuelle (les équipes terrain traitent des dizaines d'eSIM en simultané).",
       "Documenter le design system en parallèle du produit plutôt qu'après coup, pour tenir le rythme agile sans dette.",
       "Valider chaque itération majeure par du test utilisateur plutôt que par la seule revue interne.",
     ],
     learnings:
-      "Concevoir seule pour une équipe de production m'a appris à documenter aussi précisément qu'un design system l'exige — ce qui a rendu possible la conversion en skills IA du dossier Design-to-code.",
+      "Concevoir seule pour une équipe de production m'a appris à documenter aussi précisément qu'un design system l'exige, ce qui a rendu possible la conversion en skills IA du dossier Design-to-code.",
     ndaNote: "Visuels reconstitués génériquement : données, statuts et libellés sont fictifs, pour respecter la confidentialité Thales.",
     cover: { kind: "mockup", density: "grid", labels: ["eSIM #A104", "Statut", "Ligne", "Action"] },
     metrics: [
@@ -124,8 +127,8 @@ export const PROJECTS: Project[] = [
     color: "paper",
     tab: "Dossier 02 · Design-to-code",
     title: "Design system × Agent IA",
-    meta: "Le cycle de conception divisé par 3",
-    role: "Seule designer à l'origine du design system, de sa gouvernance et de sa conversion en règles exploitables par un agent IA.",
+    meta: "Encoder un design system pour qu'il survive au passage à l'IA",
+    role: "J'ai initié et piloté ce projet : audit et consolidation de toute la documentation existante et implicite, conception du pipeline de gouvernance, et rédaction des premiers skills. Un collègue développeur a rejoint le projet pour relire, enrichir et faire évoluer la version développeur avec les informations manquantes de son point de vue, avant de la diffuser à son équipe. Nous maintenons les skills à deux depuis, en mise à jour continue.",
     desc: (
       <>
         Création, documentation et gouvernance du design system, puis conversion de ses
@@ -134,37 +137,45 @@ export const PROJECTS: Project[] = [
       </>
     ),
     context:
-      "Le cycle conception → livraison prenait jusqu'à 6 mois sur certains projets : trop d'allers-retours entre maquette, spec et code. Hypothèse : si le design system est assez rigoureux, ses règles peuvent devenir des skills qu'un agent IA sait appliquer pour générer un premier prototype codé fiable.",
+      "Le design system de Thales existait déjà, réparti entre un site de référence et des pages Figma. Une partie de ses règles restait cependant implicite : des décisions que l'équipe appliquait par habitude (logique des boutons, hiérarchie visuelle), jamais formalisées noir sur blanc. Cette documentation suffisait à des designers capables d'inférer le contexte manquant ; elle ne suffisait plus dès lors que des agents IA se sont mis à générer du code de production, car sans règles explicites, ils réintroduisaient des éléments hors système, comme un tableau importé de Material Design.",
     process: [
       {
-        title: "Design system",
-        body: "Création, documentation et gouvernance des composants, tokens et règles d'usage — la fondation sans laquelle rien n'est automatisable.",
-        visual: { kind: "tokens" },
+        title: "Gouvernance",
+        body: "Audit et consolidation de toute la documentation, existante et implicite, en deux référentiels complets : un pour les designers, un pour les développeurs.",
       },
       {
-        title: "Conversion en skills IA",
-        body: "Traduction des règles du design system en prompts et skills structurés, exploitables par un agent IA de génération de code.",
-        visual: { kind: "pipeline", steps: ["Design system", "Skills IA", "Agent IA", "Proto codé"], highlight: 1 },
+        title: "Traduction en skills IA",
+        body: "Conversion des règles en trois déclinaisons, designers, vibe-codeurs, développeurs, chacune calibrée sur le niveau d'abstraction et les garde-fous dont son audience a besoin.",
+        visual: { kind: "journey", stages: ["Designers", "Vibe-codeurs", "Développeurs"] },
       },
       {
-        title: "Prototype codé",
-        body: "Génération de prototypes React / Next.js branchés aux API réelles, prêts pour revue développeurs plutôt que pour une simple démo visuelle.",
+        title: "Validation terrain",
+        body: "Prototypes React / Next.js connectés à de vraies API, données réelles traitées en Python, testés directement auprès de clients grands comptes plutôt qu'en interne.",
         visual: { kind: "mockup", density: "list", labels: ["Composant", "Props", "État", "API"] },
       },
     ],
     decisions: [
-      "Investir du temps dans la rigueur du design system avant de toucher à l'IA — un skill ne vaut que ce que vaut la règle qu'il encode.",
-      "Brancher les prototypes aux API réelles plutôt qu'à des données statiques, pour que la revue développeurs porte sur du vrai comportement.",
-      "Garder un contrôle humain sur chaque sortie de l'agent avant intégration — l'IA accélère le premier jet, pas la validation.",
+      "Gouvernance : consolidation de toute la documentation (existante et implicite) en deux référentiels complets, un pour les designers et un pour les développeurs.",
+      "Traduction en skills IA : trois déclinaisons plutôt qu'une version unique (designers, vibe-codeurs, développeurs), chaque audience ayant besoin d'un niveau d'abstraction et de garde-fous différents.",
+      "Enrichissement développeur : la version intègre mes propres guidelines de design-to-code, comme base de départ concrète pour l'utilisateur du skill.",
+      "Amélioration itérative : avec mon collègue développeur, documentation méthodique des faux pas récurrents de l'IA (éléments hors design system, écarts de hiérarchie visuelle) pour affiner les skills à chaque itération.",
+      "Validation terrain : prototypes de démonstration codés en React/Next.js, connectés à de vraies API, avec des données réelles traitées en Python, pour tester le système directement auprès de clients plutôt qu'en interne.",
     ],
     learnings:
       "Le design-to-code ne remplace pas le jugement design : il déplace l'effort vers l'amont (rigueur du système) et libère du temps en aval (delivery).",
-    ndaNote: "Le pipeline ci-contre est montré dans sa structure ; les règles et prompts précis restent internes à Thales.",
-    cover: { kind: "pipeline", steps: ["Design system", "Skills IA", "Agent IA", "Proto codé"] },
+    ndaNote: "Le schéma ci-contre présente le pipeline dans sa structure ; les règles et prompts précis des skills restent internes à Thales.",
+    cover: {
+      kind: "diagram",
+      src: "/AI/pipeline_design_system_vers_skills_ia.svg",
+      alt: "Schéma du pipeline de transformation du design system Thales en skills IA, en six étapes : documentation existante, gouvernance consolidée, traduction en skills IA, amélioration itérative, prototypes codés, démonstrations clients",
+      eyebrow: "Pipeline design system → skills IA",
+    },
+    peek: false,
     metrics: [
-      { num: "6 → 2", label: "mois de cycle de conception" },
-      { num: "React", label: "prototypes Next.js branchés aux API" },
-      { num: "Skills IA", label: "règles du DS converties en prompts" },
+      { num: "2", label: "clients grands comptes ont testé les prototypes" },
+      { num: "4h", label: "gagnées par cycle d'itération design et débogage" },
+      { num: "5", label: "personnes utilisent les skills à ce jour, en test" },
+      { num: "6 → 2", label: "mois de production pour la V1, équipe réduite à 6" },
     ],
     chips: ["Design system", "Design-to-code", "IA"],
     tabMl: "ml-5 md:ml-[18%] lg:ml-[26%]",
@@ -211,6 +222,7 @@ export const PROJECTS: Project[] = [
     learnings: "Un outil interne ne se juge pas à sa livraison mais à son adoption.",
     ndaNote: "Écrans reconstitués génériquement : parcours et libellés sont fictifs, pour respecter la confidentialité Thales.",
     cover: { kind: "beforeAfter", from: "Traitement manuel, 12 étapes", to: "Parcours guidé, 4 étapes", curveTo: "95 %" },
+    peek: false,
     metrics: [
       { num: "95 %", label: "d'adoption en 2 mois" },
       { num: "1 prix", label: "d'excellence interne" },
@@ -231,11 +243,31 @@ export const PROJECTS: Project[] = [
     desc: (
       <>
         Application mobile d&apos;éducation sexuelle pour les 15-18 ans, conçue par une équipe de{" "}
-        <strong>11 étudiants</strong> en Master — recherche terrain, chatbot IA et contenus pensés
-        pour lever les tabous.
+        <strong>11 étudiants</strong> en Master, de la recherche terrain à la mise en production.
+        Enquête quantitative, personas et itérations avec enseignants et jury ont façonné un
+        chatbot IA, des contenus et des mini-jeux pensés pour informer sans juger, sur un sujet
+        encore tabou.
       </>
     ),
-    cover: { kind: "photo", src: "/erios/home.png", alt: "Écran d'accueil de l'application Erios" },
+    cover: { kind: "photo", src: "/erios/games.png", alt: "Mini-jeux et quiz interactifs de l'application Erios" },
+    panelNote: (
+      <>
+        <p className="mb-3">
+          Erios est une application mobile (iOS/Android, développée en React Native) et un site
+          vitrine (HTML/CSS/JS) dédiés à l&apos;éducation sexuelle des adolescents de 15 à 18 ans.
+        </p>
+        <p className="mb-3 font-semibold">Fonctionnalités clés :</p>
+        <PlaceholderList
+          items={[
+            "Éri, un chatbot IA (basé sur le modèle Phi2 via Ollama) incarné par une mascotte, disponible 24/7, anonyme et non-jugeant, entraîné sur des données validées par des professionnels de santé",
+            "Contenus éducatifs sous forme d'articles, infographies et vidéos couvrant biologie, contraception, orientation sexuelle, identité de genre, relations, bien-être, droits et législation",
+            "Jeux et quiz interactifs (textes à trous, histoires immersives) avec système de gamification (badges, niveaux, progression)",
+            "Carte interactive pour localiser les services de santé sexuelle à proximité",
+            "Ressources dédiées aux victimes de violences ou harcèlement",
+          ]}
+        />
+      </>
+    ),
     placeholders: [
       {
         label: "La demande",
@@ -276,7 +308,7 @@ export const PROJECTS: Project[] = [
                 "76 % jugent l'éducation sexuelle à l'école insuffisante (étude OpinionWay / La Maison des Femmes)",
                 "Plus de la moitié des jeunes n'osent pas poser toutes leurs questions en cours",
                 "45,7 % ne peuvent pas parler de sexualité avec leur famille",
-                "Seulement 14,3 % feraient entièrement confiance à une IA pour des questions intimes — un point critique qui a orienté la stratégie produit (nécessité d'une mascotte pour humaniser le chatbot)",
+                "Seulement 14,3 % feraient entièrement confiance à une IA pour des questions intimes, un point critique qui a orienté la stratégie produit (nécessité d'une mascotte pour humaniser le chatbot)",
               ]}
             />
             <p className="mt-4">

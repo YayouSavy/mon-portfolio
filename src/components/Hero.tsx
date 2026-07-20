@@ -46,7 +46,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.p variants={item} className="mb-9 max-w-[540px] text-xl leading-normal text-mist">
-            Je conçois des applications web riches en données, de la recherche utilisateur à la
+            Je conçois des applications métier complexes, de la recherche utilisateur à la
             delivery.
           </motion.p>
 
