@@ -5,6 +5,9 @@
    décommente les 3 directives, et garde tailwind.config.ts.
    ============================================================ */
 @import "tailwindcss";
+/* Police des titres, embarquée en base64 dans le CSS (voir le fichier pour le
+   pourquoi). Les @import doivent rester en tête de fichier. */
+@import "./font-display.css";
 
 /* @tailwind base;
 @tailwind components;
@@ -23,16 +26,25 @@
   --color-violet: #642AEE;
   --color-paper:  #FBFBFB;
   --color-mist:   #EFEFEF;
+  /* Papier kraft des fiches chiffrées, sur lequel le noir passe largement AA. */
+  --color-beige:  #EDE3D0;
 
-  --radius-folder: 24px;
+  --radius-folder: 14px;
 
-  --shadow-paper:      0 2px 0 rgba(0,0,0,0.45), 0 16px 28px -8px rgba(0,0,0,0.55);
-  --shadow-paper-lift: 0 4px 0 rgba(0,0,0,0.4),  0 28px 44px -10px rgba(0,0,0,0.6);
+  --shadow-paper:      0 2px 0 rgba(0,0,0,0.12), 0 16px 28px -8px rgba(0,0,0,0.16);
+  --shadow-paper-lift: 0 4px 0 rgba(0,0,0,0.1),  0 28px 44px -10px rgba(0,0,0,0.2);
 
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-soft:   cubic-bezier(0.22, 1, 0.36, 1);
 
-  --font-display: var(--font-bricolage), system-ui, sans-serif;
+  /* font-display · RÉSERVÉE AUX <h2>. Revista est une fonte à blocs tamponnés,
+     illisible en petit : elle ne doit pas descendre dans le corps de texte.
+     Une seule source, le @font-face base64 importé plus haut ; on ne passe plus
+     par next/font, dont le fallback métrique local(Arial) résolvait toujours et
+     masquait un éventuel échec de chargement. */
+  --font-display: "Revista", system-ui, sans-serif;
+  /* font-body · tout le reste du site, y compris les h1 et les gros chiffres. */
+  --font-body:    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-accent:  var(--font-krona), system-ui, sans-serif;
 }
 
@@ -41,24 +53,33 @@
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* Fond du site : papier clair (photo texture) partout, plus de fond sombre en dessous du contenu */
+body {
+  background-color: var(--color-paper);
+  background-image: url("/paper-bg.png");
+  background-repeat: repeat;
+  background-size: 700px auto;
+  background-blend-mode: multiply;
+}
+
 /* Grain papier global : fixe, non interactif, jamais sur un conteneur scrollable */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   background-image: var(--grain);
-  opacity: 0.05;
+  opacity: 0.035;
+  mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 90;
 }
 
-/* Focus visible : lime sur fond sombre, violet sur les surfaces claires */
+/* Focus visible : violet par défaut (fond clair partout), lime dans les surfaces sombres (nav) */
 :focus-visible {
-  outline: 3px solid #DDFA6C;
+  outline: 3px solid #642AEE;
   outline-offset: 3px;
   border-radius: 6px;
 }
-.light-surface :focus-visible { outline-color: #642AEE; }
 
 .skip-link {
   position: absolute; left: 24px; top: -80px; z-index: 200;
@@ -90,21 +111,93 @@ body::after {
 .grain-overlay::after  { opacity: 0.3;  mix-blend-mode: overlay; }
 .grain-soft::after     { opacity: 0.14; mix-blend-mode: overlay; }
 
-/* ============================================================
-   OMBRE DES DOSSIERS · drop-shadow (filter) pour épouser la
-   silhouette onglet + corps + trombone, contrairement à box-shadow.
-   ============================================================ */
-.sheet {
-  filter: drop-shadow(0 2px 0 rgba(0,0,0,0.5)) drop-shadow(0 16px 24px rgba(0,0,0,0.5));
-  transition: filter 0.45s var(--ease-spring);
-}
-.sheet[data-lift="true"] {
-  filter: drop-shadow(0 4px 0 rgba(0,0,0,0.45)) drop-shadow(0 30px 40px rgba(0,0,0,0.6));
-}
-
 /* Framer Motion gère le reduced-motion via <MotionConfig reducedMotion="user">.
    Ce bloc couvre le reste (transitions CSS de confort). */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto !important; }
-  .sheet, .skip-link { transition: none; }
+  .skip-link { transition: none; }
+}
+
+/* ============================================================
+   ANNOTATIONS MANUSCRITES
+   Deux usages, deux encres, rien d'autre.
+   · .note-marge  → note posée sur le fond papier, à côté d'une fiche
+     chiffrée. Jamais À L'INTÉRIEUR d'une card : on annote la page,
+     pas l'objet posé dessus.
+   · .repere      → numéro cerclé sur un schéma ou une UI reconstruite.
+   Jamais de noir pur : en bleu d'encre, le manuscrit se lit comme
+   quelque chose qui a été écrit, pas comme une police décorative.
+   ============================================================ */
+:root {
+  --hand: var(--font-hand), "Architects Daughter", cursive;
+  --ink-pen: #1f3a68; /* bleu stylo — notes de marge (10.9:1 sur le papier) */
+  --ink-red: #a8352c; /* rouge correction — repères de schéma (6.3:1 sur le papier) */
+}
+
+.note-marge {
+  font-family: var(--hand);
+  font-size: 16px; /* jamais en dessous */
+  line-height: 1.35;
+  color: var(--ink-pen);
+  max-width: 190px;
+  margin-top: 12px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(31, 58, 104, 0.22);
+  background: none; /* se pose sur le fond papier, ne crée pas de surface */
+  transform: rotate(-1.6deg);
+  transform-origin: left top;
+}
+/* Alternance de signe, posée par l'index de rendu : les notes vivent dans des
+   cellules de grille distinctes, nth-of-type ne les verrait pas se suivre. */
+.note-marge.is-alt {
+  transform: rotate(1.1deg);
+}
+
+/* Sous 900px la marge n'existe plus : la note passe pleine largeur, à plat.
+   Elle ne disparaît jamais — elle porte du sens, pas de la décoration. */
+@media (max-width: 900px) {
+  .note-marge,
+  .note-marge.is-alt {
+    max-width: none;
+    margin-top: 10px;
+    transform: none;
+  }
+}
+
+/* Le repère se pose DANS LA MARGE de la page, à gauche du schéma et hors de la fiche :
+   on annote la page, on n'écrit pas sur l'objet posé dessus. La fiche fait 1080px de
+   large au maximum ; sous 1240px de viewport il n'y a plus de marge où le poser, il
+   repasse alors en tête de légende plutôt que de se faire couper par overflow-x-clip. */
+.repere-marge {
+  position: relative;
+}
+@media (min-width: 1240px) {
+  .repere-marge > .repere {
+    position: absolute;
+    top: -11px; /* cale le cercle de 34px sur la ligne de légende, ~13px */
+    left: -80px;
+  }
+}
+
+.repere {
+  font-family: var(--hand);
+  font-size: 17px;
+  line-height: 1;
+  color: var(--ink-red);
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1.7px solid var(--ink-red);
+  border-radius: 50%;
+  transform: rotate(-7deg);
+  flex: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note-marge,
+  .note-marge.is-alt,
+  .repere {
+    transform: none;
+  }
 }

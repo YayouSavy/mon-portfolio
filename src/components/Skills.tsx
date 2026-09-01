@@ -1,22 +1,20 @@
 "use client";
 // → Type : Client Component
 // → Raison : whileInView (pop des fiches)
+import Image from "next/image";
 import { motion } from "framer-motion";
 import SectionTitle, { Accent as AccentWord } from "./SectionTitle";
 import Tape from "./props/Tape";
-import { SKILL_CARDS, type Accent } from "../lib/data";
+import { getContent } from "../lib/content";
+import { type Lang, UI } from "../lib/i18n";
 import { spring, springBouncy, viewport } from "../lib/motion";
 
-const CARD: Record<Accent, string> = {
-  paper: "bg-paper text-ink border-noir",
-  lime: "bg-lime text-ink border-noir",
-  violet: "bg-violet text-white border-white",
-  mist: "bg-mist text-ink border-noir/30",
-};
+export default function Skills({ lang }: { lang: Lang }) {
+  const t = UI[lang].home;
+  const { SKILL_CARDS } = getContent(lang);
 
-export default function Skills() {
   return (
-    <section id="competences" aria-label="Compétences" className="py-[clamp(72px,10vh,140px)]">
+    <section id="competences" aria-label={t.skillsAria} className="scroll-mt-[84px] py-[clamp(72px,10vh,140px)]">
       <div className="mx-auto w-[min(1240px,100%-48px)]">
         <motion.header
           initial={{ opacity: 0, y: 36 }}
@@ -26,7 +24,8 @@ export default function Skills() {
           className="mb-14"
         >
           <SectionTitle>
-            Compé<AccentWord>tences</AccentWord>
+            {t.skillsTitleA}
+            <AccentWord>{t.skillsTitleB}</AccentWord>
           </SectionTitle>
         </motion.header>
 
@@ -38,21 +37,16 @@ export default function Skills() {
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               viewport={viewport}
               transition={{ ...springBouncy, delay: i * 0.11 }}
-              className={`relative rounded-folder border-2 px-[30px] pb-[34px] pt-11 shadow-paper transition-all duration-300 ease-spring hover:-translate-y-2 hover:!rotate-0 hover:shadow-paper-lift ${c.rot} ${CARD[c.color]} ${c.color === "violet" ? "grain-overlay" : "grain-multiply"} ${c.color !== "violet" ? "light-surface" : ""}`}
+              className="relative"
             >
-              <Tape color={c.tape} className="-top-[13px] left-[30px] -rotate-[4deg]" />
-              <p className="font-accent text-[10px] uppercase tracking-[0.1em] opacity-70">{c.kicker}</p>
-              <h3 className="mb-[22px] mt-2 text-[27px] font-extrabold tracking-[-0.01em]">{c.title}</h3>
-              <ul className="relative z-[1] flex flex-wrap gap-2.5">
-                {c.pills.map((pill) => (
-                  <li
-                    key={pill}
-                    className={`rounded-full border-2 px-4 py-2 text-sm font-medium transition-transform duration-300 ease-spring hover:-translate-y-0.5 hover:-rotate-1 ${c.color === "violet" ? "border-white" : "border-noir"}`}
-                  >
-                    {pill}
-                  </li>
-                ))}
-              </ul>
+              <Tape color={c.tape} className="-top-[3px] left-1/2 -translate-x-1/2 -rotate-[4deg]" />
+              <Image
+                src={c.image}
+                alt={c.pills.filter((pill) => pill !== "Tokens & librairies partagées" && pill !== "Shared tokens & libraries").join(", ")}
+                width={c.imageWidth}
+                height={c.imageHeight}
+                className={`relative z-[1] h-auto w-full transition-all duration-300 ease-spring hover:-translate-y-2 hover:!rotate-0 ${c.rot}`}
+              />
             </motion.div>
           ))}
         </div>

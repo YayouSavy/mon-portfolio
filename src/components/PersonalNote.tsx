@@ -3,7 +3,9 @@
 // → Raison : whileInView + whileHover sur les pastilles
 import { motion } from "framer-motion";
 import Tape from "./props/Tape";
-import { PERSONAL_TAGS, type Accent } from "../lib/data";
+import { getContent } from "../lib/content";
+import { type Lang, UI } from "../lib/i18n";
+import type { Accent } from "../lib/data";
 
 const PILL_STYLE: Record<Accent, string> = {
   paper: "bg-paper text-ink border-noir",
@@ -13,19 +15,22 @@ const PILL_STYLE: Record<Accent, string> = {
 };
 
 /** La touche perso sous la fiche identité : ce qu'il y a à côté du taf. */
-export default function PersonalNote() {
+export default function PersonalNote({ lang }: { lang: Lang }) {
+  const t = UI[lang].home;
+  const { PERSONAL_TAGS } = getContent(lang);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24, rotate: -6 }}
       whileInView={{ opacity: 1, y: 0, rotate: -3 }}
       viewport={{ once: true, amount: 0.4 }}
       transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.28 }}
-      className="light-surface grain-multiply relative rounded-folder bg-paper p-7 text-ink shadow-paper transition-all duration-500 ease-spring hover:shadow-paper-lift hover:!rotate-0"
+      className="light-surface grain-multiply relative rounded-folder border-2 border-noir bg-paper p-7 text-ink shadow-paper transition-all duration-500 ease-spring hover:shadow-paper-lift hover:!rotate-0"
     >
-      <Tape label="( off duty )" className="-top-[13px] left-8 -rotate-[6deg]" />
+      <Tape label={t.offDuty} className="-top-[13px] left-8 -rotate-[6deg]" />
 
       <h4 className="relative z-[1] mb-4 font-accent text-[11px] uppercase tracking-[0.08em] text-violet">
-        Hors des écrans
+        {t.awayFromScreens}
       </h4>
 
       <ul className="relative z-[1] flex flex-wrap gap-2">

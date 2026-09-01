@@ -11,19 +11,19 @@ export default function SectionTitle({
 }) {
   return (
     <h2
-      className={`font-display text-[clamp(40px,6.4vw,88px)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-white ${className}`}
+      className={`font-display text-[clamp(40px,6.4vw,88px)] font-extrabold uppercase leading-[0.95] tracking-[-0.02em] text-ink ${className}`}
     >
       {children}
     </h2>
   );
 }
 
-/** Mot accentué en lime plein. */
+/** Mot accentué en violet plein (contraste AA sur fond clair). */
 export function Accent({ children }: { children: ReactNode }) {
-  return <span className="text-lime">{children}</span>;
+  return <span className="text-violet">{children}</span>;
 }
 
-/** Mot en contour lime (signature de la section Dossiers). */
+/** Mot en contour violet (signature de la section Dossiers). */
 export function Outline({ children }: { children: ReactNode }) {
-  return <span className="text-transparent [-webkit-text-stroke:2px_#DDFA6C]">{children}</span>;
+  return <span className="text-transparent [-webkit-text-stroke:2px_#642AEE]">{children}</span>;
 }

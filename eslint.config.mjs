@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Outils Node en CommonJS, hors application : les règles TS/Next
+    // (dont l'interdiction de require()) ne s'y appliquent pas.
+    "scripts/**",
   ]),
 ]);
 

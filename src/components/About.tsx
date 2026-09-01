@@ -4,88 +4,96 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import SectionTitle, { Accent } from "./SectionTitle";
-import Tape from "./props/Tape";
 import PersonalNote from "./PersonalNote";
-import { ID_ROWS, STEPS } from "../lib/data";
-import { spring, viewport } from "../lib/motion";
+import { getContent } from "../lib/content";
+import { type Lang, UI } from "../lib/i18n";
+import { spring, springBouncy, viewport } from "../lib/motion";
 
-export default function About() {
+export default function About({ lang }: { lang: Lang }) {
+  const t = UI[lang].home;
+  const { ID_ROWS, ABOUT_TEXT } = getContent(lang);
+
+  // scroll-mt = hauteur du header sticky (84px), sinon l'ancre atterrit dessous
   return (
-    <section id="about" aria-label="À propos" className="py-[clamp(72px,10vh,140px)]">
-      <div className="mx-auto grid w-[min(1240px,100%-48px)] items-start gap-[clamp(44px,5.5vw,88px)] lg:grid-cols-[1fr_1.05fr]">
+    <section id="about" aria-label={t.aboutAria} className="scroll-mt-[84px] py-[clamp(72px,10vh,140px)]">
+      <div className="mx-auto grid w-[min(1240px,100%-48px)] items-start gap-[clamp(44px,5.5vw,88px)] lg:grid-cols-[1.5fr_1fr]">
         {/* ---- Texte + process ---- */}
         <motion.div initial={{ opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={viewport} transition={spring}>
           <SectionTitle>
             About <Accent>me</Accent>
           </SectionTitle>
 
-          <p className="mb-6 mt-7 max-w-[52ch] text-[19px] leading-relaxed">
-            Depuis plus de 2 ans chez Thales, je couvre tout le cycle produit au sein
-            d&apos;équipes agiles : recherche, cadrage, design system, prototypage codé et
-            handoff développeurs. Je suis également{" "}
-            <strong className="font-semibold text-white">référente accessibilité</strong> sur
-            les interfaces livrées.
-          </p>
+          <div className="relative mt-7 origin-top-left lg:scale-125 lg:-translate-x-28">
+            {/* Même échelle typo que la card du Hero ("Spécialisée dans les systèmes…").
+                Le conteneur est en lg:scale-125 : text-base compense l'agrandissement optique. */}
+            <p className="light-surface grain-multiply relative max-w-[1000px] rounded-folder border-2 border-noir bg-paper p-7 text-base leading-relaxed text-ink shadow-paper md:p-9">
+              {ABOUT_TEXT}
+            </p>
 
-          <span className="inline-flex -rotate-2 items-center gap-2.5 rounded-full border-2 border-noir bg-lime px-[22px] py-3 font-accent text-[11px] uppercase tracking-[0.08em] text-ink transition-transform duration-300 ease-spring hover:scale-[1.04] hover:!rotate-0">
-            WCAG 2.2 · RGAA
-          </span>
-
-          <div className="mt-10 border-t border-white/15">
-            {STEPS.map((s) => (
-              <div
-                key={s.title}
-                className="group border-b border-white/15 px-2 py-6 transition-all duration-300 ease-spring hover:bg-white/[0.03] hover:pl-6"
-              >
-                <h3 className="mb-1.5 text-[23px] font-bold tracking-[-0.01em] text-white transition-colors duration-300 group-hover:text-lime">
-                  {s.title}
-                </h3>
-                <p className="max-w-[56ch] text-[15.5px] text-mist">{s.desc}</p>
-              </div>
-            ))}
+            {/* ---- Carte ID : plus grande, calée sous la note (derrière, qui dépasse en bas), déplaçable ----
+                drag pilote son propre style transform, donc le décalage/rotation se règle via
+                les valeurs de motion (x/y/rotate), pas des classes Tailwind translate/rotate.
+                -z-10 la fait passer derrière la note (élément statique, empile au-dessus par défaut). */}
+            <motion.div
+              drag
+              dragMomentum={false}
+              dragElastic={0.15}
+              whileDrag={{ scale: 1.12, zIndex: 30, cursor: "grabbing" }}
+              initial={{ opacity: 0, scale: 0.85, rotate: -8, x: 15, y: 124 }}
+              whileInView={{ opacity: 1, scale: 1, rotate: -6, x: 15, y: 124 }}
+              viewport={viewport}
+              transition={{ ...springBouncy, delay: 0.4 }}
+              className="absolute -bottom-16 left-0 -z-10 w-[62%] max-w-[440px] cursor-grab"
+            >
+              <Image
+                src="/ID.png"
+                alt="Carte d'identité d'Illiana Savy, Product Designer"
+                width={897}
+                height={568}
+                draggable={false}
+                className="h-auto w-full"
+              />
+            </motion.div>
           </div>
         </motion.div>
 
         {/* ---- Colonne droite : fiche identité + touche perso ---- */}
-        <div className="flex flex-col gap-6">
-          {/* ---- La fiche : photo encadrée + scotch-étiquette ---- */}
+        <div className="relative flex flex-col gap-6">
+          {/* ---- La fiche : liste CV (formation / expérience / langues) ---- */}
           <motion.div
             initial={{ opacity: 0, y: 36 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={viewport}
             transition={{ ...spring, delay: 0.14 }}
-            className="light-surface grain-multiply relative rotate-[1.4deg] rounded-folder bg-paper p-9 pb-8 text-ink shadow-paper transition-all duration-500 ease-spring hover:shadow-paper-lift hover:!rotate-0"
+            className="light-surface grain-multiply relative rotate-[1.4deg] rounded-folder border-2 border-noir bg-mist p-9 pb-8 text-ink shadow-paper transition-all duration-500 ease-spring hover:shadow-paper-lift hover:!rotate-0"
           >
-            <div className="relative z-[1] mb-6 flex flex-col gap-7 sm:flex-row sm:items-start">
-              <div className="relative w-[172px] shrink-0 -rotate-[2.5deg]">
-                <div className="relative aspect-[1/1.05] overflow-hidden rounded-2xl border-[3px] border-noir bg-lime">
-                  <Image src="/portrait.png" alt="" fill quality={95} sizes="172px" className="object-contain object-bottom" />
-                </div>
-                <Tape label="( about me )" className="-bottom-3 -left-4 -rotate-[8deg]" />
-              </div>
-              <div>
-                <p className="text-[30px] font-extrabold leading-[1.05] tracking-[-0.01em]">Illiana Savy</p>
-                <p className="mt-2.5 font-accent text-[11px] uppercase tracking-[0.08em] text-violet">Product Designer</p>
-              </div>
-            </div>
-
             <dl className="relative z-[1]">
-              {ID_ROWS.map((row) => (
-                <div key={row.dt} className="grid gap-1.5 border-t border-noir/15 py-[15px] text-[15px] leading-relaxed md:grid-cols-[108px_1fr] md:gap-[18px]">
-                  <dt className="pt-1 font-accent text-[10px] uppercase tracking-[0.08em] opacity-75">{row.dt}</dt>
+              {ID_ROWS.map((row, i) => (
+                <div key={row.dt} className={`grid gap-1.5 py-[15px] text-[18px] leading-relaxed md:grid-cols-[108px_1fr] md:gap-[18px] ${i !== 0 ? "border-t border-noir/15" : ""}`}>
+                  <dt className="pt-1 font-accent text-[12px] uppercase tracking-[0.08em] text-[#30380D]">{row.dt}</dt>
                   <dd>
-                    {row.lines.map((l) => (
-                      <span key={l.text} className={`block ${l.muted ? "text-[13.5px] opacity-75" : ""}`}>
-                        {l.text}
-                      </span>
-                    ))}
+                    {row.lines.map((l) =>
+                      /* Les précisions de contexte ne sont plus du petit texte gris :
+                         elles passent en tag vert/noir, comme partout ailleurs sur le site. */
+                      l.muted ? (
+                        <span key={l.text} className="mb-1.5 mt-1 block">
+                          <span className="inline-flex rounded-full border-2 border-noir bg-lime px-3.5 py-1.5 font-accent text-[10px] uppercase leading-tight tracking-[0.08em] text-ink">
+                            {l.node ?? l.text}
+                          </span>
+                        </span>
+                      ) : (
+                        <span key={l.text} className="block font-medium text-[#141414]">
+                          {l.node ?? l.text}
+                        </span>
+                      ),
+                    )}
                   </dd>
                 </div>
               ))}
             </dl>
           </motion.div>
 
-          <PersonalNote />
+          <PersonalNote lang={lang} />
         </div>
       </div>
     </section>

@@ -12,7 +12,7 @@ export default function PhotoVisual({ src, alt, className = "" }: { src: string;
   if (failed) {
     return (
       <div
-        className={`grid aspect-[4/3] place-items-center gap-2 rounded-folder border-2 border-dashed border-white/20 text-mist/50 ${className}`}
+        className={`grid aspect-[4/3] place-items-center gap-2 rounded-folder border-2 border-dashed border-noir/20 text-ink/50 ${className}`}
       >
         <ImageOff aria-hidden size={22} strokeWidth={1.75} />
         <p className="text-xs">Image à venir</p>

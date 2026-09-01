@@ -26,9 +26,9 @@ export default function DSTokenSheet({ className = "" }: { className?: string })
 
       <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.08em] opacity-70">Échelle typographique</p>
       <div aria-hidden className="mb-5 flex items-baseline gap-3">
-        <span className="font-display text-lg font-extrabold">Aa</span>
-        <span className="font-display text-2xl font-extrabold">Aa</span>
-        <span className="font-display text-3xl font-extrabold">Aa</span>
+        <span className="text-lg font-extrabold">Aa</span>
+        <span className="text-2xl font-extrabold">Aa</span>
+        <span className="text-3xl font-extrabold">Aa</span>
       </div>
 
       <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.08em] opacity-70">Espacements</p>

@@ -1,0 +1,8 @@
+{
+  // Tailwind v4 introduit @theme, @utility, @apply… que l'analyseur CSS intégré de
+  // VS Code ne connaît pas : il affiche "Unknown at rule @theme". C'est un faux
+  // positif de l'éditeur, pas une erreur de compilation. On le désactive.
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore"
+}

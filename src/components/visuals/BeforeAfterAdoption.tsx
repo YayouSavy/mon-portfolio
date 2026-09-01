@@ -48,7 +48,7 @@ export default function BeforeAfterAdoption({
           />
         </svg>
         <p className="text-right">
-          <span className="block font-display text-2xl font-extrabold leading-none">{curveTo}</span>
+          <span className="block text-2xl font-extrabold leading-none">{curveTo}</span>
           <span className="block text-[10px] font-medium opacity-70">d&apos;adoption</span>
         </p>
       </div>
